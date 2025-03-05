@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>DL&lowbar;LAB1</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="dl_lab1">DL_LAB1</h1>
+<blockquote>
+<p>313551133_陳軒宇</p>
+</blockquote>
+<h2 id="1-introduction">1. Introduction</h2>
+<p>在這個 Lab 中，需要實作一個具有 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn></mrow><annotation encoding="application/x-tex">2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span> 層 Hidden Layer 的 Multilayer Perceptron(MLP) ，並實現其 forward, back propagation，以及嘗試不同的 activation function 與 optimizer。</p>
+<table width="90%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center"><img src="https://i.imgur.com/KEuZcCk.png" width="600" height=auto /> </td>
+  </tr>
+  <tr>
+    <td align="center">MLP</td>
+  </tr>
+</table>
+<p>在建立完成 MLP 後，需要利用給定的 Linear Data 以及 XOR Data 進行訓練，並嘗試不同的訓練設定，以了解各項參數對於模型的影響。</p>
+<table width="90%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center"><img src="https://i.imgur.com/PPczo0n.png" width="600" height=auto /> </td>
+  </tr>
+  <tr>
+    <td align="center">Dataset</td>
+  </tr>
+</table>
+<h2 id="2-experiment-setups">2. Experiment setups</h2>
+<h3 id="a-sigmoid-functions">A. Sigmoid functions</h3>
+<p>使用 Sigmoid 函數作為 Activation Function，其函數如下：</p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>σ</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>x</mi></mrow></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">\sigma(x) = \frac{1}{1 + e^{-x}}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0908em;vertical-align:-0.7693em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6973em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight">x</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p>由於 Sigmoid 函數輸出的範圍在 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[0, 1]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mclose">]</span></span></span></span> 之間，因此可以很適合用來作為 Binary Classification 的 Activation Function。</p>
+<table width="90%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Logistic-curve.svg/640px-Logistic-curve.svg.png" width="600" height=auto /> </td>
+  </tr>
+  <tr>
+    <td align="center">Sigmoid</td>
+  </tr>
+</table>
+<p>在訓練過程中，需要對 Activation Function 進行微分，而 Sigmoid 函數的微分如下：</p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mi>σ</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mi>σ</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>⋅</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>σ</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\sigma&#x27;(x) = \sigma(x) \cdot (1 - \sigma(x))
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0519em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8019em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">))</span></span></span></span></span></p>
+<p>在實作時，我定義了一個 <code>Sigmoid</code> class，並在其中定義了 <code>forward</code> 與 <code>backward</code> 函數，分別用來計算 Sigmoid 函數的正向與反向傳播，其他 Activation Function 也是類似的實作方式。</p>
+<pre><code class="language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Sigmoid</span>(<span class="hljs-title class_ inherited__">Layer</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__()
+        self.out = <span class="hljs-literal">None</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__str__</span>(<span class="hljs-params">self</span>) -&gt; <span class="hljs-built_in">str</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Sigmoid&quot;</span>
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x: np.ndarray</span>) -&gt; np.ndarray:
+        out = <span class="hljs-number">1.0</span> / (<span class="hljs-number">1.0</span> + np.exp(-x))
+        self.out = out
+        <span class="hljs-keyword">return</span> out
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">backward</span>(<span class="hljs-params">self, dout: np.ndarray</span>) -&gt; np.ndarray:
+        dx = dout * (<span class="hljs-number">1.0</span> - self.out) * self.out
+        <span class="hljs-keyword">return</span> dx
+</code></pre>
+<h3 id="b-neural-network">B. Neural network</h3>
+<p>使用一個具有多層 Hidden Layer 的 Multilayer Perceptron(MLP) 作為模型，其架構如下：</p>
+<table width="90%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center"><img src="file:///d:\OneDrive\Course\NYCU\113\113-0_DLP\Labs\Lab1\report\image-5.png" width="300" height="300" /> </td>
+  </tr>
+  <tr>
+    <td align="center">Model</td>
+  </tr>
+</table>
+<p>初始化時，需要指定每一層的輸入維度、輸出維度，以及 Activation Function 和 Optimizer，並且可以指定是否使用 Bias (Linear Layer 或 Affine Layer)。</p>
+<p>在初始化參數時，使用了 <code>np.random.randn</code> 來初始化權重 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi></mrow><annotation encoding="application/x-tex">W</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">W</span></span></span></span>，並且使用 <code>np.zeros</code> 來初始化 Bias <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span>，並將這些參數保存在 <code>params</code> 中。同時，也使用 <code>OrderedDict</code> 來保存每一層的 Layer 使用的 Transformation 和 Activation Function，以便在 Forward 和 Backward 過程中能夠按照順序進行計算。</p>
+<pre><code class="language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MLP</span>(<span class="hljs-title class_ inherited__">Model</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, input_size: <span class="hljs-built_in">int</span>, hidden_size: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>], output_size: <span class="hljs-built_in">int</span>, 
+                 lr: <span class="hljs-built_in">float</span>=<span class="hljs-number">0.01</span>, optimizer: Optimizer=SGD, layer: Layer=Affine, activation: Layer=Sigmoid</span>):
+        <span class="hljs-built_in">super</span>().__init__()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.output_size = output_size
+
+        self.lr = lr
+        self.optimizer = optimizer(lr)
+        self.layer = layer
+        self.activation = activation
+
+        self.params = {}
+        <span class="hljs-keyword">for</span> i, (x, y) <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(pairwise([input_size] + hidden_size + [output_size]), <span class="hljs-number">1</span>):
+            self.params[<span class="hljs-string">&#x27;W&#x27;</span>+<span class="hljs-built_in">str</span>(i)] = np.random.randn(x, y)
+            self.params[<span class="hljs-string">&#x27;b&#x27;</span>+<span class="hljs-built_in">str</span>(i)] = np.zeros(y)
+        
+        self.layers = OrderedDict()
+        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-built_in">len</span>(hidden_size) + <span class="hljs-number">2</span>):
+            self.layers[<span class="hljs-string">f&#x27;Layer<span class="hljs-subst">{i}</span>&#x27;</span>] = self.layer(self.params[<span class="hljs-string">f&#x27;W<span class="hljs-subst">{i}</span>&#x27;</span>], self.params[<span class="hljs-string">f&#x27;b<span class="hljs-subst">{i}</span>&#x27;</span>])
+            self.layers[<span class="hljs-string">f&#x27;Activation<span class="hljs-subst">{i}</span>&#x27;</span>] = activation()
+</code></pre>
+<p>在本次 Lab 中，我使用了 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn></mrow><annotation encoding="application/x-tex">2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span> 層具有 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>10</mn></mrow><annotation encoding="application/x-tex">10</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">10</span></span></span></span> 個 Hidden Unit 的 Hidden Layer，並且使用 Sigmoid 函數作為 Activation Function、使用 SGD 作為 Optimizer。</p>
+<pre><code class="language-python">model = MLP(input_size=<span class="hljs-number">2</span>, hidden_size=[<span class="hljs-number">10</span>, <span class="hljs-number">10</span>], output_size=<span class="hljs-number">1</span>,
+            lr=<span class="hljs-number">0.01</span>, optimizer=SGD, activation=Sigmoid)
+</code></pre>
+<h3 id="c-backpropagation">C. Backpropagation</h3>
+<p>在 Forward 過程中，需要將輸入 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> 進行 Linear Transformation ，但由於這裡加上了 Bias，因此應為 Affine Transformation。將 Transformation 後的輸出進行 Activation Function 的計算，得到輸出 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span>。</p>
+<p>單一層 Affine Layer 的 Forward 過程如下，圖片中的形狀大小為 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn></mrow><annotation encoding="application/x-tex">3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">3</span></span></span></span> 的部分在本次 Lab 中為 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>10</mn></mrow><annotation encoding="application/x-tex">10</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">10</span></span></span></span>：</p>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center"><img src="file:///d:\OneDrive\Course\NYCU\113\113-0_DLP\Labs\Lab1\report\image-10.png" width="300" height="300" /> </td>
+  </tr>
+  <tr>
+    <td align="center">Affine Layer</td>
+  </tr>
+</table>
+<p>因此整個 Network 的 Forward 過程如下：</p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>z</mi><mn>1</mn></msub><mo>=</mo><mi>σ</mi><mo stretchy="false">(</mo><mi>x</mi><msub><mi>W</mi><mn>1</mn></msub><mo>+</mo><msub><mi>b</mi><mn>1</mn></msub><mo stretchy="false">)</mo><mspace linebreak="newline"></mspace><msub><mi>z</mi><mn>2</mn></msub><mo>=</mo><mi>σ</mi><mo stretchy="false">(</mo><msub><mi>z</mi><mn>1</mn></msub><msub><mi>W</mi><mn>2</mn></msub><mo>+</mo><msub><mi>b</mi><mn>2</mn></msub><mo stretchy="false">)</mo><mspace linebreak="newline"></mspace><mi>y</mi><mo>=</mo><mi>σ</mi><mo stretchy="false">(</mo><msub><mi>z</mi><mn>2</mn></msub><msub><mi>W</mi><mn>3</mn></msub><mo>+</mo><msub><mi>b</mi><mn>3</mn></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">z_1 = \sigma(xW_1 + b_1) \\
+z_2 = \sigma(z_1W_2 + b_2) \\
+y = \sigma(z_2W_3 + b_3)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span></p>
+<p>根據模型的輸出 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> 和真實的標籤 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>y</mi><mo>^</mo></mover></mrow><annotation encoding="application/x-tex">\hat{y}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span></span></span></span> 之間的差距，可以計算出 Loss Function <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span></span></span></span>，這裡使用了 Mean Squared Error(MSE) 作為 Loss Function。</p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>L</mi><mo>=</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mo stretchy="false">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><msub><mover accent="true"><mi>y</mi><mo>^</mo></mover><mi>i</mi></msub><msup><mo stretchy="false">)</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">L = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.9291em;vertical-align:-1.2777em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">n</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6514em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.1141em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p>在計算完 loss function 後，需要使用 Backpropagation 來更新模型的權重，因此需要使用 Chain Rule 來計算 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><msub><mi>W</mi><mn>1</mn></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{\partial L}{\partial W_1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.3252em;vertical-align:-0.4451em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8801em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3173em;"><span style="top:-2.357em;margin-left:-0.1389em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal mtight">L</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4451em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>、<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><msub><mi>W</mi><mn>2</mn></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{\partial L}{\partial W_2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.3252em;vertical-align:-0.4451em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8801em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3173em;"><span style="top:-2.357em;margin-left:-0.1389em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal mtight">L</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4451em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>、<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><msub><mi>W</mi><mn>3</mn></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{\partial L}{\partial W_3}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.3252em;vertical-align:-0.4451em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8801em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3173em;"><span style="top:-2.357em;margin-left:-0.1389em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal mtight">L</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4451em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span> 以及 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><msub><mi>b</mi><mn>1</mn></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{\partial L}{\partial b_1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.3252em;vertical-align:-0.4451em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8801em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mtight"><span class="mord mathnormal mtight">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3173em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal mtight">L</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4451em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>、<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><msub><mi>b</mi><mn>2</mn></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{\partial L}{\partial b_2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.3252em;vertical-align:-0.4451em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8801em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mtight"><span class="mord mathnormal mtight">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3173em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal mtight">L</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4451em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>、<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><msub><mi>b</mi><mn>3</mn></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{\partial L}{\partial b_3}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.3252em;vertical-align:-0.4451em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8801em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mtight"><span class="mord mathnormal mtight">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3173em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal mtight">L</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4451em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>。</p>
+<table width="90%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center"><img src="file:///d:\OneDrive\Course\NYCU\113\113-0_DLP\Labs\Lab1\report\image-11.png" width="300" height="300" /></td>
+  </tr>
+  <tr>
+    <td align="center">Affine Layer 的 Backpropagation 計算</td>
+  </tr>
+</table>
+<p>程式碼實現如下，其中 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>o</mi><mi>u</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">dout</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">o</span><span class="mord mathnormal">u</span><span class="mord mathnormal">t</span></span></span></span> 為 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><mi>y</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{\partial L}{\partial y}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.3612em;vertical-align:-0.4811em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8801em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal mtight">L</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4811em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">dx</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">x</span></span></span></span> 為 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><mi>x</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{\partial L}{\partial x}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2251em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8801em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal mtight">x</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal mtight">L</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>W</mi></mrow><annotation encoding="application/x-tex">dW</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.13889em;">W</span></span></span></span> 為 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><mi>W</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{\partial L}{\partial W}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2251em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8801em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal mtight" style="margin-right:0.13889em;">W</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal mtight">L</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>b</mi></mrow><annotation encoding="application/x-tex">db</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">b</span></span></span></span> 為 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><mi>b</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{\partial L}{\partial b}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2251em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8801em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal mtight">b</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal mtight">L</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>。</p>
+<pre><code class="language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Affine</span>(<span class="hljs-title class_ inherited__">Layer</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x: np.ndarray</span>) -&gt; np.ndarray:
+        self.x = x
+        out = np.dot(x, self.W) + self.b
+        <span class="hljs-keyword">return</span> out
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">backward</span>(<span class="hljs-params">self, dout: np.ndarray</span>) -&gt; np.ndarray:
+        dx = np.dot(dout, self.W.T)
+        self.dW = np.dot(self.x.T, dout)
+        self.db = np.<span class="hljs-built_in">sum</span>(dout, axis=<span class="hljs-number">0</span>)
+        <span class="hljs-keyword">return</span> dx
+</code></pre>
+<p>注意到不管是在 <code>Affine</code> Layer 還是在 <code>Sigmoid</code> Layer 中，都需要保存一些中間過程的變數，以便在 Backward 過程中使用。將這些變數保存在 attribute 中，這樣在 Backward 過程中就可以直接呼叫 <code>backward</code> 函數，而不需要再傳入前一層的梯度以外的參數。</p>
+<pre><code class="language-python">    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x</span>):
+        <span class="hljs-keyword">for</span> layer <span class="hljs-keyword">in</span> self.layers.values():
+            x = layer.forward(x)
+        self.pred_y = x
+        <span class="hljs-keyword">return</span> x
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">backward</span>(<span class="hljs-params">self, y</span>):
+        dout = y
+        <span class="hljs-keyword">for</span> layer <span class="hljs-keyword">in</span> <span class="hljs-built_in">reversed</span>(self.layers.values()):
+            dout = layer.backward(dout)
+        <span class="hljs-keyword">return</span> dout
+</code></pre>
+<h2 id="3-results-of-your-testing">3. Results of your testing</h2>
+<h3 id="a-screenshot-and-comparison-figure">A. Screenshot and comparison figure</h3>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center"><img src="file:///d:\OneDrive\Course\NYCU\113\113-0_DLP\Labs\Lab1\report\imgs\base_linear.png" width="300" height="300" /></td>
+    <td align="center"><img src="file:///d:\OneDrive\Course\NYCU\113\113-0_DLP\Labs\Lab1\report\imgs\base_xor.png" width="300" height="300" /></td>
+  </tr>
+  <tr>
+    <td align="center">Linear Dataset</td>
+    <td align="center">XOR Dataset</td>
+  </tr>
+</table>
+<h3 id="b-show-the-accuracy-of-your-prediction">B. Show the accuracy of your prediction</h3>
+<h4 id="linear-data">Linear Data</h4>
+<p>loss:</p>
+<pre><code class="language-text">epoch  1000 loss : 0.07849912063132942
+epoch  2000 loss : 0.04520821461964975
+epoch  3000 loss : 0.03313976789135106
+epoch  4000 loss : 0.026940282327582377
+epoch  5000 loss : 0.0231676558935124
+epoch  6000 loss : 0.020597469744500184
+epoch  7000 loss : 0.018696248300644046
+epoch  8000 loss : 0.0172013349710097
+epoch  9000 loss : 0.01597140118800952
+epoch 10000 loss : 0.014924860070591127
+epoch 11000 loss : 0.014011814589522444
+epoch 12000 loss : 0.013200238163389779
+epoch 13000 loss : 0.01246870731690159
+epoch 14000 loss : 0.011802361939324704
+epoch 15000 loss : 0.011190551366477411
+epoch 16000 loss : 0.010625407146434231
+epoch 17000 loss : 0.010100948298129709
+epoch 18000 loss : 0.009612504451975824
+epoch 19000 loss : 0.009156335033611893
+epoch 20000 loss : 0.008729372736693393
+</code></pre>
+<p>prediction:</p>
+<pre><code class="language-text">Iter: 0 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 1 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 2 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 3 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 4 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 5 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 6 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 7 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 8 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 9 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 10 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 11 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 12 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 13 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 14 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 15 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 16 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 17 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 18 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 19 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 20 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 21 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 22 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 23 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 24 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 25 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 26 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 27 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 28 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 29 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 30 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 31 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 32 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 33 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 34 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 35 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 36 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 37 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 38 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 39 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 40 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 41 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 42 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 43 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 44 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 45 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 46 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 47 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 48 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 49 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 50 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 51 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 52 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 53 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 54 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 55 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 56 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 57 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 58 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 59 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 60 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 61 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 62 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 63 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 64 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 65 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 66 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 67 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 68 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 69 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 70 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 71 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 72 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 73 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 74 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 75 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 76 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 77 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 78 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 79 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 80 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 81 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 82 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 83 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 84 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 85 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 86 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 87 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 88 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 89 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 90 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 91 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 92 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 93 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 94 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 95 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 96 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 97 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 98 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 99 |	 Ground truth: [0] |	 Predict: [0]
+loss=0.00873 accuracy=100.00%
+</code></pre>
+<h4 id="xor-data">XOR Data</h4>
+<p>loss:</p>
+<pre><code class="language-text">epoch  1000 loss : 0.2507043488190884
+epoch  2000 loss : 0.24827133390907646
+epoch  3000 loss : 0.24530348812303807
+epoch  4000 loss : 0.2402814733403033
+epoch  5000 loss : 0.23052597643483982
+epoch  6000 loss : 0.21082976053330493
+epoch  7000 loss : 0.1749271050808638
+epoch  8000 loss : 0.12385950082031297
+epoch  9000 loss : 0.0832229156422266
+epoch 10000 loss : 0.05890902645016745
+epoch 11000 loss : 0.04323208060886581
+epoch 12000 loss : 0.03235669038687363
+epoch 13000 loss : 0.024545998062900892
+epoch 14000 loss : 0.01887006239216881
+epoch 15000 loss : 0.014738278931597995
+epoch 16000 loss : 0.011720456712043657
+epoch 17000 loss : 0.009496796793265413
+epoch 18000 loss : 0.007836141129906608
+epoch 19000 loss : 0.0065758111998092195
+epoch 20000 loss : 0.005602855922810573
+</code></pre>
+<p>prediction:</p>
+<pre><code class="language-text">Iter: 0 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 1 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 2 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 3 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 4 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 5 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 6 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 7 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 8 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 9 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 10 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 11 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 12 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 13 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 14 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 15 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 16 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 17 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 18 |	 Ground truth: [1] |	 Predict: [1]
+Iter: 19 |	 Ground truth: [0] |	 Predict: [0]
+Iter: 20 |	 Ground truth: [1] |	 Predict: [1]
+loss=0.00560 accuracy=100.00%
+</code></pre>
+<h3 id="c-learning-curve-loss-epoch-curve">C. Learning curve (loss, epoch curve)</h3>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center"><img src="file:///d:\OneDrive\Course\NYCU\113\113-0_DLP\Labs\Lab1\report\imgs\base_linear_loss.png" width="300" height="300" /></td>
+    <td align="center"><img src="file:///d:\OneDrive\Course\NYCU\113\113-0_DLP\Labs\Lab1\report\imgs\base_xor_loss.png" width="300" height="300" /></td>
+  </tr>
+  <tr>
+    <td align="center">Linear Dataset</td>
+    <td align="center">XOR Dataset</td>
+  </tr>
+</table>
+<h3 id="d-anything-you-want-to-present">D. Anything you want to present</h3>
+<ul>
+<li>在 Backpropagation 過程中，若使用 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>y</mi><mo>−</mo><mover accent="true"><mi>y</mi><mo>^</mo></mover><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(y - \hat{y})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mclose">)</span></span></span></span> 作為 Loss Function 的梯度，則在使用 Sigmoid 函數作為 Activation Function 時，會訓練的比較快，但在不使用 Activation Function 時，則無法訓練成功。若取 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mn>2</mn><mo>×</mo><mo stretchy="false">(</mo><mi>y</mi><mo>−</mo><mover accent="true"><mi>y</mi><mo>^</mo></mover><mo stretchy="false">)</mo></mrow><mi>n</mi></mfrac></mrow><annotation encoding="application/x-tex">\frac{2 \times (y - \hat{y})}{n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.355em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.01em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.485em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="mbin mtight">×</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span><span class="mbin mtight">−</span><span class="mord accent mtight"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-2.7em;"><span class="pstrut" style="height:2.7em;"></span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span><span style="top:-2.7em;"><span class="pstrut" style="height:2.7em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord mtight">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span> 作為 Loss Function 的梯度，則在大部分的情況下，都可以訓練成功，但在以 Sigmoid 函數作為 Activation Function 時，需要相對較多的 Epochs。</li>
+</ul>
+<h2 id="4-discussion">4. Discussion</h2>
+<h3 id="a-try-different-learning-rates">A. Try different learning rates</h3>
+<p>Parameters:</p>
+<ul>
+<li>hidden layer size = [10, 10]</li>
+<li>optimizer = SGD</li>
+<li>activation function = Sigmoid</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>lr</th>
+<th>epochs</th>
+<th>Linear</th>
+<th>XOR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>10000</td>
+<td>100%</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>0.5</td>
+<td>10000</td>
+<td>100%</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>0.1</td>
+<td>10000</td>
+<td>100%</td>
+<td>95.24%</td>
+</tr>
+<tr>
+<td>0.1</td>
+<td>20000</td>
+<td>100%</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>0.05</td>
+<td>10000</td>
+<td>98%</td>
+<td>71.43%</td>
+</tr>
+<tr>
+<td>0.05</td>
+<td>50000</td>
+<td>100%</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>0.01</td>
+<td>20000</td>
+<td>98%</td>
+<td>52.38%</td>
+</tr>
+<tr>
+<td>0.01</td>
+<td>50000</td>
+<td>98%</td>
+<td>71.43%</td>
+</tr>
+</tbody>
+</table>
+<p>可以觀察到，在 Learning Rate 大時，模型的收斂速度較快，在 Learning Rate 小時，需要更多的 Epochs。此外，在 Learning Rate 過小時，也有可能會無法到達最佳解的位置。</p>
+<h3 id="b-try-different-numbers-of-hidden-units">B. Try different numbers of hidden units</h3>
+<table>
+<thead>
+<tr>
+<th>hiddens</th>
+<th>epochs</th>
+<th>Linear</th>
+<th>XOR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[20,  20]</td>
+<td>20000</td>
+<td>100%</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>[5, 5]</td>
+<td>20000</td>
+<td>100%</td>
+<td>85.71%</td>
+</tr>
+<tr>
+<td>[5, 5]</td>
+<td>50000</td>
+<td>100%</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>[2, 2]</td>
+<td>20000</td>
+<td>100%</td>
+<td>71.43%</td>
+</tr>
+<tr>
+<td>[2, 2]</td>
+<td>50000</td>
+<td>100%</td>
+<td>100%</td>
+</tr>
+</tbody>
+</table>
+<p>可以觀察到，當 Hidden Layer 太小時，模型無法很好的學習到 XOR Data 的特徵，但在增加 Epochs 後，仍然可以達到 100% 的準確率。</p>
+<h3 id="c-try-without-activation-functions">C. Try without activation functions</h3>
+<p>移除 Activation Function 後，部分的程式碼如下：</p>
+<pre><code class="language-python">self.params = {}
+<span class="hljs-keyword">for</span> i, (x, y) <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(pairwise([input_size] + hidden_size + [output_size]), <span class="hljs-number">1</span>):
+    self.params[<span class="hljs-string">&#x27;W&#x27;</span>+<span class="hljs-built_in">str</span>(i)] = np.random.randn(x, y)
+    self.params[<span class="hljs-string">&#x27;b&#x27;</span>+<span class="hljs-built_in">str</span>(i)] = np.zeros(y)
+
+self.layers = OrderedDict()
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-built_in">len</span>(hidden_size) + <span class="hljs-number">2</span>):
+    self.layers[<span class="hljs-string">f&#x27;Layer<span class="hljs-subst">{i}</span>&#x27;</span>] = self.layer(self.params[<span class="hljs-string">f&#x27;W<span class="hljs-subst">{i}</span>&#x27;</span>], self.params[<span class="hljs-string">f&#x27;b<span class="hljs-subst">{i}</span>&#x27;</span>])
+</code></pre>
+<p>Parameters:</p>
+<ul>
+<li>hidden layer size = [5, 5]</li>
+<li>learning rate = 0.01</li>
+<li>optimizer = SGD</li>
+<li>activation function = Sigmoid</li>
+<li>epochs = 20000</li>
+</ul>
+<table width="90%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center"><img src="file:///d:\OneDrive\Course\NYCU\113\113-0_DLP\Labs\Lab1\report\imgs\wo_activation_linear_loss.png" width="300" height="300" /></td>
+    <td align="center"><img src="file:///d:\OneDrive\Course\NYCU\113\113-0_DLP\Labs\Lab1\report\imgs\wo_activation_linear_plot.png" width="300" height="300" /></td>
+  </tr>
+  <tr>
+    <td align="center">Loss of Linear dataset</td>
+    <td align="center">Result of Linear dataset (99.00%) </td>
+  </tr>
+  <tr>
+    <td align="center"><img src="file:///d:\OneDrive\Course\NYCU\113\113-0_DLP\Labs\Lab1\report\imgs\wo_activation_xor_loss.png" width="300" height="300" /></td>
+    <td align="center"><img src="file:///d:\OneDrive\Course\NYCU\113\113-0_DLP\Labs\Lab1\report\imgs\wo_activation_xor_plot.png" width="300" height="300" /></td>
+  </tr>
+  <tr>
+    <td align="center">Loss of XOR dataset</td>
+    <td align="center">Result of XOR dataset (52.38%) </td>
+  </tr>
+</table>
+<p>若不使用 Activation Function，則不管使用多少層 Hidden Layer，都仍然只是一個線性模型，無法學習到 XOR Data 的特徵。</p>
+<h1 id="5-extra">5. Extra</h1>
+<h3 id="a-implement-different-optimizers">A. Implement different optimizers</h3>
+<p>除了使用 SGD 作為 Optimizer 外，我也實作了 AdaGrad，部分的程式碼如下：</p>
+<pre><code class="language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">AdaGrad</span>(<span class="hljs-title class_ inherited__">Optimizer</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, lr: <span class="hljs-built_in">float</span>=<span class="hljs-number">0.01</span></span>):
+        self.lr = lr
+        self.eps = <span class="hljs-number">1e-7</span>
+        self.h = <span class="hljs-literal">None</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">update</span>(<span class="hljs-params">self, params: <span class="hljs-type">Dict</span>[<span class="hljs-built_in">str</span>, np.ndarray], grads: <span class="hljs-type">Dict</span>[<span class="hljs-built_in">str</span>, np.ndarray]</span>):
+        <span class="hljs-keyword">if</span> self.h <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:
+            self.h = {}
+            <span class="hljs-keyword">for</span> key, val <span class="hljs-keyword">in</span> params.items():
+                self.h[key] = np.zeros_like(val)
+        
+        <span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> params.keys():
+            self.h[key] += grads[key] ** <span class="hljs-number">2</span>
+            params[key] -= self.lr * grads[key] / (np.sqrt(self.h[key]) + self.eps)
+        <span class="hljs-keyword">return</span> params
+</code></pre>
+<p>Parameters:</p>
+<ul>
+<li>hidden layer size = [10, 10]</li>
+<li>activation function = Sigmoid</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>optimizer</th>
+<th>lr</th>
+<th>epochs</th>
+<th>Linear</th>
+<th>XOR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AdaGrad</td>
+<td>0.1</td>
+<td>10000</td>
+<td>100%</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>SGD</td>
+<td>0.1</td>
+<td>10000</td>
+<td>100%</td>
+<td>95.24%</td>
+</tr>
+<tr>
+<td>AdaGrad</td>
+<td>0.01</td>
+<td>10000</td>
+<td>99%</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>SGD</td>
+<td>0.01</td>
+<td>20000</td>
+<td>98%</td>
+<td>52.38%</td>
+</tr>
+</tbody>
+</table>
+<p>可以觀察到，AdaGrad 需要的 Epochs 較少，且在 XOR Data 上的表現也較好。</p>
+<h3 id="b-implement-different-activation-functions">B. Implement different activation functions</h3>
+<h4 id="relu">ReLU</h4>
+<pre><code class="language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ReLU</span>(<span class="hljs-title class_ inherited__">Layer</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x: np.ndarray</span>) -&gt; np.ndarray:
+        self.mask = (x &lt;= <span class="hljs-number">0</span>)
+        out = x.copy()
+        out[self.mask] = <span class="hljs-number">0</span>
+        <span class="hljs-keyword">return</span> out
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">backward</span>(<span class="hljs-params">self, dout: np.ndarray</span>) -&gt; np.ndarray:
+        dout[self.mask] = <span class="hljs-number">0</span> <span class="hljs-comment"># set non-positive elements to 0</span>
+        dx = dout
+        <span class="hljs-keyword">return</span> dx
+</code></pre>
+<p>Parameters:</p>
+<ul>
+<li>hidden layer size = [10, 10]</li>
+<li>learning rate = 0.01</li>
+<li>optimizer = SGD</li>
+<li>activation function = ReLU</li>
+<li>epochs = 10000</li>
+</ul>
+<p>Results:</p>
+<ul>
+<li>Linear dataset: 100%</li>
+<li>XOR dataset: 100%</li>
+</ul>
+<h4 id="tanh">Tanh</h4>
+<pre><code class="language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Tanh</span>(<span class="hljs-title class_ inherited__">Layer</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x: np.ndarray</span>) -&gt; np.ndarray:
+        out = np.tanh(x)
+        self.out = out
+        <span class="hljs-keyword">return</span> out
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">backward</span>(<span class="hljs-params">self, dout: np.ndarray</span>) -&gt; np.ndarray:
+        dx = dout * (<span class="hljs-number">1</span> - self.out ** <span class="hljs-number">2</span>)
+        <span class="hljs-keyword">return</span> dx
+</code></pre>
+<p>Parameters:</p>
+<ul>
+<li>hidden layer size = [10, 10]</li>
+<li>learning rate = 0.01</li>
+<li>optimizer = SGD</li>
+<li>activation function = ReLU</li>
+<li>epochs = 10000</li>
+</ul>
+<p>Results:</p>
+<ul>
+<li>Linear dataset: 98%</li>
+<li>XOR dataset: 100%</li>
+</ul>
+<style>
+    img {
+        max-height: 400px;
+        max-width: 90%;
+        height: auto;
+        width: auto;
+    }
+</style>
+            <script async src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+            
+        </body>
+        </html>
