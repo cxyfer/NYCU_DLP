@@ -1,4 +1,4 @@
-# NYCU 2024 DLP Summer
+# NYCU DLP 2024 Summer
 
 > Borrowed a lot from many people, thank them.
 
