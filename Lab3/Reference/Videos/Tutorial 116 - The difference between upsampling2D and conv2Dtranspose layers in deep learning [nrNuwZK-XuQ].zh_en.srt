@@ -1,0 +1,2944 @@
+1
+00:00:00,880 --> 00:00:06,560
+嗨大家，歡迎來到介紹性 Python 教學，特別關注於影像處理
+
+2
+00:00:00,880 --> 00:00:06,560
+hi everyone welcome to introductory python tutorials with a special focus on image processing
+
+3
+00:00:06,560 --> 00:00:12,240
+在這段影片中，我們來快速了解一下升採樣和卷積的區別
+
+4
+00:00:06,560 --> 00:00:12,240
+ in this video let's have a quick look at the difference between up sampling
+
+5
+00:00:12,240 --> 00:00:14,080
+和卷積
+
+6
+00:00:12,240 --> 00:00:14,080
+ and convolutional
+
+7
+00:00:14,080 --> 00:00:15,200
+轉置操作
+
+8
+00:00:14,080 --> 00:00:15,200
+ transpose operation
+
+9
+00:00:15,200 --> 00:00:17,760
+而且這兩者都可以是 2D
+
+10
+00:00:15,200 --> 00:00:17,760
+ and that can be in 2d both of these can be in 2d
+
+11
+00:00:17,760 --> 00:00:18,720
+和 3D
+
+12
+00:00:17,760 --> 00:00:18,720
+ and 3d
+
+13
+00:00:18,720 --> 00:00:22,160
+而且這些通常會在單位中使用
+
+14
+00:00:18,720 --> 00:00:22,160
+ and these get commonly used in units
+
+15
+00:00:22,160 --> 00:00:24,960
+以及其他架構，如自編碼器
+
+16
+00:00:22,160 --> 00:00:24,960
+ and also in other architectures like autoencoders
+
+17
+00:00:24,960 --> 00:00:28,080
+以及生成對抗網路
+
+18
+00:00:24,960 --> 00:00:28,080
+ and generative adversarial networks
+
+19
+00:00:28,080 --> 00:00:32,159
+如果你不知道我們在說什麼單位，我強烈推薦
+
+20
+00:00:28,080 --> 00:00:32,159
+ if you don't know what we are talking about when it comes to unit i definitely recommend
+
+21
+00:00:32,159 --> 00:00:34,320
+觀看最後兩三部影片
+
+22
+00:00:32,159 --> 00:00:34,320
+ watching the last two three videos
+
+23
+00:00:34,320 --> 00:00:36,160
+我們討論了自動編碼器
+
+24
+00:00:34,320 --> 00:00:36,160
+ where we talked about auto encoders
+
+25
+00:00:36,160 --> 00:00:41,840
+以及單位與自動編碼器非常相似，只是跳過連接部分不同
+
+26
+00:00:36,160 --> 00:00:41,840
+ and how units are very similar to auto encoders except for the skip connection part
+
+27
+00:00:41,840 --> 00:00:45,440
+現在在解碼器部分
+
+28
+00:00:41,840 --> 00:00:45,440
+ now on the decoder part
+
+29
+00:00:45,440 --> 00:00:50,000
+這意味著在機器學習中你會有一個較小的向量
+
+30
+00:00:45,440 --> 00:00:50,000
+ which by definition means you have a smaller vector in terms of machine learning
+
+31
+00:00:50,000 --> 00:00:53,120
+在編碼器部分，你是從一個大型圖像轉換到一個較小的向量
+
+32
+00:00:50,000 --> 00:00:53,120
+ in the encoder part you're going from a large image to a smaller vector
+
+33
+00:00:53,120 --> 00:00:55,600
+以及解碼器部分，您從一個小的
+
+34
+00:00:53,120 --> 00:00:55,600
+ and the decoder part you're going from a small
+
+35
+00:00:55,600 --> 00:00:59,280
+張量，我應該說是從較小的張量回到大型圖像
+
+36
+00:00:55,600 --> 00:00:59,280
+ tensor i should say smaller tensor back to a large image
+
+37
+00:00:59,280 --> 00:01:02,160
+同時，您是如何升級您的
+
+38
+00:00:59,280 --> 00:01:02,160
+ while you're doing that how do you upscale your
+
+39
+00:01:02,160 --> 00:01:05,600
+或者提升您的影像解析度
+
+40
+00:01:02,160 --> 00:01:05,600
+ or up sample your image right
+
+41
+00:01:05,600 --> 00:01:06,400
+所以
+
+42
+00:01:05,600 --> 00:01:06,400
+ so
+
+43
+00:01:06,400 --> 00:01:07,439
+從較小的
+
+44
+00:01:06,400 --> 00:01:07,439
+ going from a smaller
+
+45
+00:01:07,439 --> 00:01:11,040
+尺寸到較大的尺寸，這就是我們所說的，這裡有兩個選擇，主要的
+
+46
+00:01:07,439 --> 00:01:11,040
+ size to a larger size this is what we're talking about there are two options primary
+
+47
+00:01:11,040 --> 00:01:12,960
+我應該說其中一個是升頻
+
+48
+00:01:11,040 --> 00:01:12,960
+ options i should say one is up sampling
+
+49
+00:01:12,960 --> 00:01:15,439
+你可以根據名稱升頻你的影像
+
+50
+00:01:12,960 --> 00:01:15,439
+ you can up sample your image as the name suggests
+
+51
+00:01:15,439 --> 00:01:16,960
+這意味著你正在取樣
+
+52
+00:01:15,439 --> 00:01:16,960
+ it's sampling meaning you're
+
+53
+00:01:16,960 --> 00:01:18,560
+獲取像素值
+
+54
+00:01:16,960 --> 00:01:18,560
+ taking the pixel values
+
+55
+00:01:18,560 --> 00:01:21,439
+你正在以某種方式擴展它們
+
+56
+00:01:18,560 --> 00:01:21,439
+ and you're extending them in a way
+
+57
+00:01:21,439 --> 00:01:24,080
+你也可以進行轉置操作
+
+58
+00:01:21,439 --> 00:01:24,080
+ and you can also perform transpose operations
+
+59
+00:01:24,080 --> 00:01:27,759
+首先讓我們看看這兩者之間的差異
+
+60
+00:01:24,080 --> 00:01:27,759
+ and let's see what the difference is between these two first of all
+
+61
+00:01:27,759 --> 00:01:32,000
+再次提醒你，我們討論的單位是編碼器路徑，對吧
+
+62
+00:01:27,759 --> 00:01:32,000
+ just to remind you again the unit that we're talking about you have an encoder path right
+
+63
+00:01:32,000 --> 00:01:32,960
+所以
+
+64
+00:01:32,000 --> 00:01:32,960
+ so
+
+65
+00:01:32,960 --> 00:01:38,400
+為什麼尺寸會隨著向下移動而變小，那是因為當你應用
+
+66
+00:01:32,960 --> 00:01:38,400
+ why is the dimension size going down as you go down that's because when you apply
+
+67
+00:01:38,400 --> 00:01:42,399
+最大池化操作，大小為兩乘兩，對吧，那正是
+
+68
+00:01:38,400 --> 00:01:42,399
+ the max pooling operation with the size of two by two right that's exactly
+
+69
+00:01:42,399 --> 00:01:44,640
+我們用這個紅色箭頭做了什麼
+
+70
+00:01:42,399 --> 00:01:44,640
+ what we are doing with this red arrow
+
+71
+00:01:44,640 --> 00:01:47,520
+這會將你的圖像大小減少一半
+
+72
+00:01:44,640 --> 00:01:47,520
+ that decreases the size of your image by half
+
+73
+00:01:47,520 --> 00:01:52,159
+所以你從 256 變成 128，再變成 64，再變成 32，最後變成 16。
+
+74
+00:01:47,520 --> 00:01:52,159
+ so you're going from 256 to 128 to 64 to 32 to 16.
+
+75
+00:01:52,159 --> 00:01:56,399
+在解碼器端，我們需要做完全相反的操作，從 16 轉換到 32
+
+76
+00:01:52,159 --> 00:01:56,399
+ on the decoder side we need to do exactly the opposite go from 16 to 32
+
+77
+00:01:56,399 --> 00:02:01,119
+如此類推，這是我們實際上可以應用我們的 2D 上採樣的地方
+
+78
+00:01:56,399 --> 00:02:01,119
+ and so on this is where we can actually apply our up sampling 2d
+
+79
+00:02:01,119 --> 00:02:02,880
+或者轉換 2D 轉置
+
+80
+00:02:01,119 --> 00:02:02,880
+ or convert 2d transpose
+
+81
+00:02:02,880 --> 00:02:06,000
+現在讓我們更仔細地看一下，既然我們知道了背景
+
+82
+00:02:02,880 --> 00:02:06,000
+ so now let's have a closer look now that we know what the context
+
+83
+00:02:06,000 --> 00:02:09,038
+現在讓我們更仔細地看一下這些
+
+84
+00:02:06,000 --> 00:02:09,038
+ is let's have a closer look of each of these
+
+85
+00:02:09,038 --> 00:02:09,840
+所以
+
+86
+00:02:09,038 --> 00:02:09,840
+ so
+
+87
+00:02:09,840 --> 00:02:10,720
+有兩種類型
+
+88
+00:02:09,840 --> 00:02:10,720
+ there are two types
+
+89
+00:02:10,720 --> 00:02:12,480
+像我們之前提到的那樣
+
+90
+00:02:10,720 --> 00:02:12,480
+ like a like we already mentioned
+
+91
+00:02:12,480 --> 00:02:13,440
+可以使用
+
+92
+00:02:12,480 --> 00:02:13,440
+ that can be used
+
+93
+00:02:13,440 --> 00:02:17,040
+上採樣 2d 非常類似於
+
+94
+00:02:13,440 --> 00:02:17,040
+ up sampling 2d is very similar to
+
+95
+00:02:17,040 --> 00:02:20,640
+最大池化，除了它顯然與最大池化相反
+
+96
+00:02:17,040 --> 00:02:20,640
+ max pooling except it's obviously opposite to max pooling
+
+97
+00:02:20,640 --> 00:02:24,239
+在 2D 上採樣中，我們會重複行
+
+98
+00:02:20,640 --> 00:02:24,239
+ where in up sampling 2d we are repeating the rows
+
+99
+00:02:24,239 --> 00:02:27,040
+和輸入的列
+
+100
+00:02:24,239 --> 00:02:27,040
+ and columns of the input
+
+101
+00:02:27,040 --> 00:02:27,360
+我會
+
+102
+00:02:27,040 --> 00:02:27,360
+ i'll
+
+103
+00:02:27,360 --> 00:02:31,280
+我會以視覺化和程式化的方式解釋這一點
+
+104
+00:02:27,360 --> 00:02:31,280
+ i'll explain that in a visual way and also in a programmatic way in a minute
+
+105
+00:02:31,280 --> 00:02:35,440
+轉換 2D 轉置，顧名思義是一種卷積操作
+
+106
+00:02:31,280 --> 00:02:35,440
+ convert 2d transpose as the name suggests is a convolution operation
+
+107
+00:02:35,440 --> 00:02:40,560
+好的，所以這裡有一個乘法運算，上採樣只是重複數據
+
+108
+00:02:35,440 --> 00:02:40,560
+ okay so there is a multiplication going on upsample is just repeating the data
+
+109
+00:02:40,560 --> 00:02:41,840
+所以如果你有
+
+110
+00:02:40,560 --> 00:02:41,840
+ so if you have
+
+111
+00:02:41,840 --> 00:02:45,920
+如果你有，我們稍後會討論到，不過讓我先不
+
+112
+00:02:41,840 --> 00:02:45,920
+ if you have we'll get to that in a second let me not
+
+113
+00:02:45,920 --> 00:02:48,640
+你知道，嘗試提供你一些抽象的細節
+
+114
+00:02:45,920 --> 00:02:48,640
+ you know try to give you abstract details
+
+115
+00:02:48,640 --> 00:02:51,599
+但我們會有一個視覺解釋
+
+116
+00:02:48,640 --> 00:02:51,599
+ but we'll i have a visual explanation of this
+
+117
+00:02:51,599 --> 00:02:53,840
+並且不能進行 2D 轉置
+
+118
+00:02:51,599 --> 00:02:53,840
+ and can't 2d transpose
+
+119
+00:02:53,840 --> 00:02:54,239
+如果你
+
+120
+00:02:53,840 --> 00:02:54,239
+ if you
+
+121
+00:02:54,239 --> 00:02:57,360
+如果你想弄清楚使用哪一個
+
+122
+00:02:54,239 --> 00:02:57,360
+ if you want to figure out which one to use
+
+123
+00:02:57,360 --> 00:03:00,879
+我個人沒有看到太多差異
+
+124
+00:02:57,360 --> 00:03:00,879
+ i haven't seen much of a difference personally
+
+125
+00:03:00,879 --> 00:03:02,319
+使用這兩者中的任何一個
+
+126
+00:03:00,879 --> 00:03:02,319
+ using either of these
+
+127
+00:03:02,319 --> 00:03:07,360
+但數量轉置已被報告會導致棋盤格伪影
+
+128
+00:03:02,319 --> 00:03:07,360
+ but quantity transpose has been reported to result in checkerboard artifacts
+
+129
+00:03:07,360 --> 00:03:07,680
+好的
+
+130
+00:03:07,360 --> 00:03:07,680
+ yeah
+
+131
+00:03:07,680 --> 00:03:09,280
+但比較不多
+
+132
+00:03:07,680 --> 00:03:09,280
+ but not much of a comparison
+
+133
+00:03:09,280 --> 00:03:14,159
+這兩者之間的文獻可能不多，也許我漏掉了什麼
+
+134
+00:03:09,280 --> 00:03:14,159
+ between these two is out there when it comes to the literature maybe i'm missing something
+
+135
+00:03:14,159 --> 00:03:15,519
+如果你們知道
+
+136
+00:03:14,159 --> 00:03:15,519
+ if you guys know
+
+137
+00:03:15,519 --> 00:03:19,360
+任何這兩者之間的比較論文，請在評論中留下
+
+138
+00:03:15,519 --> 00:03:19,360
+ any comparison paper between these two please do leave that as part of the comments
+
+139
+00:03:19,360 --> 00:03:26,959
+但對我而言，兩者都同樣好，我想更喜歡
+
+140
+00:03:19,360 --> 00:03:26,959
+ but to me both are equally well i want to prefer
+
+141
+00:03:26,959 --> 00:03:28,239
+2D 轉置
+
+142
+00:03:26,959 --> 00:03:28,239
+ con 2d transpose
+
+143
+00:03:28,239 --> 00:03:34,159
+因為這樣你也會學到一些，你知道，機密的轉置實際上會學到
+
+144
+00:03:28,239 --> 00:03:34,159
+ because that way you're also learning some you know the confidential transpose actually learns
+
+145
+00:03:34,159 --> 00:03:36,720
+和上採樣那裡沒有東西可以學習
+
+146
+00:03:34,159 --> 00:03:36,720
+ and up sampling there is nothing to learn there
+
+147
+00:03:36,720 --> 00:03:42,319
+希望在接下來的五到十分鐘內，事情能變得更清楚一些
+
+148
+00:03:36,720 --> 00:03:42,319
+ okay again hopefully in the next five to ten minutes things makes a bit more sense
+
+149
+00:03:42,319 --> 00:03:45,680
+那麼讓我先談談上採樣
+
+150
+00:03:42,319 --> 00:03:45,680
+ so let me start by talking about up sampling first
+
+151
+00:03:45,680 --> 00:03:46,159
+好的
+
+152
+00:03:45,680 --> 00:03:46,159
+ okay
+
+153
+00:03:46,159 --> 00:03:50,000
+假設這是我的輸入圖像，它只是一個三乘三像素的圖像
+
+154
+00:03:46,159 --> 00:03:50,000
+ so let's say this is my input image it's just a three by three pixel
+
+155
+00:03:50,000 --> 00:03:50,799
+好的
+
+156
+00:03:50,000 --> 00:03:50,799
+ okay
+
+157
+00:03:50,799 --> 00:03:54,879
+現在我想進行二比二的上採樣
+
+158
+00:03:50,799 --> 00:03:54,879
+ now i would like to perform two by two up sampling
+
+159
+00:03:54,879 --> 00:03:56,959
+所以這就是
+
+160
+00:03:54,879 --> 00:03:56,959
+ so this is
+
+161
+00:03:56,959 --> 00:03:58,239
+基本上
+
+162
+00:03:56,959 --> 00:03:58,239
+ basically
+
+163
+00:03:58,239 --> 00:04:01,599
+重複你的像素
+
+164
+00:03:58,239 --> 00:04:01,599
+ repeating your pixels
+
+165
+00:04:01,599 --> 00:04:06,159
+兩倍兩倍，所以在這種情況下，我的一張圖片就是我一個像素，抱歉
+
+166
+00:04:01,599 --> 00:04:06,159
+ two by two times so in this case my one image is just my one pixel sorry
+
+167
+00:04:06,159 --> 00:04:07,200
+這個紅色
+
+168
+00:04:06,159 --> 00:04:07,200
+ of this red
+
+169
+00:04:07,200 --> 00:04:09,200
+正方形是四個紅色正方形
+
+170
+00:04:07,200 --> 00:04:09,200
+ square is four red squares
+
+171
+00:04:09,200 --> 00:04:11,280
+然後是四個粉紅色的
+
+172
+00:04:09,200 --> 00:04:11,280
+ and then the four pink ones
+
+173
+00:04:11,280 --> 00:04:13,120
+然後是黃色的，以此類推
+
+174
+00:04:11,280 --> 00:04:13,120
+ and then the yellow ones and so on
+
+175
+00:04:13,120 --> 00:04:15,120
+這樣你就可以在這裡看到圖像
+
+176
+00:04:13,120 --> 00:04:15,120
+ so you can see the image right here
+
+177
+00:04:15,120 --> 00:04:18,560
+是一二三四五六對六乘六
+
+178
+00:04:15,120 --> 00:04:18,560
+ is one two three four five six right six by six
+
+179
+00:04:18,560 --> 00:04:20,560
+我們從三乘三開始
+
+180
+00:04:18,560 --> 00:04:20,560
+ and we start with three by three
+
+181
+00:04:20,560 --> 00:04:22,800
+所以尺寸翻倍了
+
+182
+00:04:20,560 --> 00:04:22,800
+ so the size doubled
+
+183
+00:04:22,800 --> 00:04:25,120
+因為我們使用的是二比二的上採樣
+
+184
+00:04:22,800 --> 00:04:25,120
+ because we are using two by two up sampling
+
+185
+00:04:25,120 --> 00:04:30,639
+這正是為什麼我們在 unit decoder 中，我們從 16 變成 32 再到 64
+
+186
+00:04:25,120 --> 00:04:30,639
+ this is exactly why we're in our unit decoder we're going from 16 to 32 to 64
+
+187
+00:04:30,639 --> 00:04:32,400
+因此大小會加倍
+
+188
+00:04:30,639 --> 00:04:32,400
+ and so on because the size doubles
+
+189
+00:04:32,400 --> 00:04:34,800
+如果你進行兩兩操作
+
+190
+00:04:32,400 --> 00:04:34,800
+ if you apply two by two operation
+
+191
+00:04:34,800 --> 00:04:39,759
+因此上採樣容易理解，你只是複製，這裡沒有任何需要訓練的東西
+
+192
+00:04:34,800 --> 00:04:39,759
+ so up sampling is easy to understand you're just copying there is nothing to train here
+
+193
+00:04:39,759 --> 00:04:44,400
+你拿一個矩陣，你拿像數字這樣的東西，當涉及到卷積時，你會重複它們
+
+194
+00:04:39,759 --> 00:04:44,400
+ you take a matrix you take like numbers you repeat them when it comes to convolution
+
+195
+00:04:44,400 --> 00:04:47,520
+再次進行 2D 轉置，讓我們使用相同的輸入
+
+196
+00:04:44,400 --> 00:04:47,520
+ 2d transpose again let's work with the same input
+
+197
+00:04:47,520 --> 00:04:50,560
+這樣可以讓我們更容易理解
+
+198
+00:04:47,520 --> 00:04:50,560
+ so it makes it a bit easy for us to understand
+
+199
+00:04:50,560 --> 00:04:55,680
+這會轉換成看起來像這樣的東西，你知道的
+
+200
+00:04:50,560 --> 00:04:55,680
+ this gets converted into something that that looks like this on you know
+
+201
+00:04:55,680 --> 00:04:56,720
+讓我解釋一下
+
+202
+00:04:55,680 --> 00:04:56,720
+ let me explain this
+
+203
+00:04:56,720 --> 00:04:59,199
+這是一個卷積操作
+
+204
+00:04:56,720 --> 00:04:59,199
+ so this is a convolution operation
+
+205
+00:04:59,199 --> 00:05:00,160
+所以我們需要定義
+
+206
+00:04:59,199 --> 00:05:00,160
+ so we need to define
+
+207
+00:05:00,160 --> 00:05:02,720
+內核大小將會是什麼
+
+208
+00:05:00,160 --> 00:05:02,720
+ what the kernel size is going to be
+
+209
+00:05:02,720 --> 00:05:07,440
+在這個例子中，我的內核大小是 1x1，就是 1x1
+
+210
+00:05:02,720 --> 00:05:07,440
+ in this example my kernel size is one by one that's it just one by one
+
+211
+00:05:07,440 --> 00:05:10,560
+但是我的步幅是 2x2，這意味著我每次移動兩個單位
+
+212
+00:05:07,440 --> 00:05:10,560
+ but then my stride is two by two that means i'm going two
+
+213
+00:05:10,560 --> 00:05:13,919
+每次一步，所以那裡有間距
+
+214
+00:05:10,560 --> 00:05:13,919
+ steps at a time that's why there is a spacing right there
+
+215
+00:05:13,919 --> 00:05:16,960
+在這兩者之間是可以的，因為我的步幅是二乘二
+
+216
+00:05:13,919 --> 00:05:16,960
+ okay in between these two because my stride is two by two
+
+217
+00:05:16,960 --> 00:05:19,919
+所以把這個想像成非常類似於二乘二的上採樣
+
+218
+00:05:16,960 --> 00:05:19,919
+ so think of this as very similar to two by two up sampling
+
+219
+00:05:19,919 --> 00:05:22,160
+那裡正在創建這個黑暗的空間
+
+220
+00:05:19,919 --> 00:05:22,160
+ there it's creating this dark space
+
+221
+00:05:22,160 --> 00:05:24,880
+但它沒有填充任何東西
+
+222
+00:05:22,160 --> 00:05:24,880
+ but it's not filling it with anything
+
+223
+00:05:24,880 --> 00:05:29,440
+這裡它用這些像素值進行上採樣
+
+224
+00:05:24,880 --> 00:05:29,440
+ here it's filling it with these these pixel values in up sampling
+
+225
+00:05:29,440 --> 00:05:31,520
+這裡它沒有填充
+
+226
+00:05:29,440 --> 00:05:31,520
+ here it's not filling with
+
+227
+00:05:31,520 --> 00:05:33,600
+就是那裡的資訊
+
+228
+00:05:31,520 --> 00:05:33,600
+ this information right there
+
+229
+00:05:33,600 --> 00:05:35,120
+現在
+
+230
+00:05:33,600 --> 00:05:35,120
+ now
+
+231
+00:05:35,120 --> 00:05:41,280
+因為這是卷積操作，所以還有一些稱為權重的東西你可以定義
+
+232
+00:05:35,120 --> 00:05:41,280
+ because this is convolution operation there is also something called weights that you can define
+
+233
+00:05:41,280 --> 00:05:46,320
+什麼是權重，權重基本上是卷積內的值
+
+234
+00:05:41,280 --> 00:05:46,320
+ what are weights weights are basically the values within the convolutional
+
+235
+00:05:46,320 --> 00:05:49,440
+在這個例子中，大小為一對一的濾波器
+
+236
+00:05:46,320 --> 00:05:49,440
+ filter of size one by one in this example
+
+237
+00:05:49,440 --> 00:05:53,039
+所以我要設置一個權重為 1，這意味著我的輸出
+
+238
+00:05:49,440 --> 00:05:53,039
+ so i'm going to put a weight of 1 that means my output
+
+239
+00:05:53,039 --> 00:05:56,560
+將會具有與我的輸入相同的值
+
+240
+00:05:53,039 --> 00:05:56,560
+ is going to have the same values as my input wherever
+
+241
+00:05:56,560 --> 00:05:58,080
+這裡有這個值
+
+242
+00:05:56,560 --> 00:05:58,080
+ there is this value
+
+243
+00:05:58,080 --> 00:06:01,919
+我希望這樣解釋能讓你明白，我們會寫一行
+
+244
+00:05:58,080 --> 00:06:01,919
+ i hope this makes sense again we'll we'll write a single line
+
+245
+00:06:01,919 --> 00:06:04,800
+或者幾行來更好地理解這一點
+
+246
+00:06:01,919 --> 00:06:04,800
+ or a few lines to understand this a bit better
+
+247
+00:06:04,800 --> 00:06:07,440
+但我只想確保在視覺上
+
+248
+00:06:04,800 --> 00:06:07,440
+ but i just want to make sure visually
+
+249
+00:06:07,440 --> 00:06:09,120
+我們在同一頁面上
+
+250
+00:06:07,440 --> 00:06:09,120
+ we are on the same page
+
+251
+00:06:09,120 --> 00:06:12,000
+上採樣非常簡單對吧
+
+252
+00:06:09,120 --> 00:06:12,000
+ up sampling very simple right
+
+253
+00:06:12,000 --> 00:06:15,280
+兩兩進行上採樣，就是複製這個卷積
+
+254
+00:06:12,000 --> 00:06:15,280
+ two by two up sampling it's just copying this convolution
+
+255
+00:06:15,280 --> 00:06:18,720
+如果你需要了解什麼是卷積，請觀看關於卷積的視頻
+
+256
+00:06:15,280 --> 00:06:18,720
+ operation you need to know what convolution is please watch the video on convolution
+
+257
+00:06:18,720 --> 00:06:20,560
+這裡的卷積是你有你的圖像
+
+258
+00:06:18,720 --> 00:06:20,560
+ here convolution is you have your image
+
+259
+00:06:20,560 --> 00:06:22,160
+和你有一個核
+
+260
+00:06:20,560 --> 00:06:22,160
+ and you have a kernel
+
+261
+00:06:22,160 --> 00:06:25,360
+你在影像的每個像素上進行卷積運算
+
+262
+00:06:22,160 --> 00:06:25,360
+ and you're multiplying the kernel at every pixel in your image
+
+263
+00:06:25,360 --> 00:06:26,880
+並且你正在移動那個卷積核
+
+264
+00:06:25,360 --> 00:06:26,880
+ and you're moving that kernel
+
+265
+00:06:26,880 --> 00:06:29,600
+在這個情況下，我的卷積核大小只有一個
+
+266
+00:06:26,880 --> 00:06:29,600
+ by how much in this case my kernel size is just one
+
+267
+00:06:29,600 --> 00:06:30,720
+或一個接一個
+
+268
+00:06:29,600 --> 00:06:30,720
+ or one by one
+
+269
+00:06:30,720 --> 00:06:34,400
+而且我每次移動兩步，這就是為什麼你有
+
+270
+00:06:30,720 --> 00:06:34,400
+ and i'm moving it two steps at a time that's why you have
+
+271
+00:06:34,400 --> 00:06:36,880
+從這裡開始，它會走一、二步
+
+272
+00:06:34,400 --> 00:06:36,880
+ from here it's going one two
+
+273
+00:06:36,880 --> 00:06:37,600
+一 二
+
+274
+00:06:36,880 --> 00:06:37,600
+ one two
+
+275
+00:06:37,600 --> 00:06:42,560
+然後在這個方向上，一二，這裡就是你擁有這個空間的地方
+
+276
+00:06:37,600 --> 00:06:42,560
+ and then also in this direction one two that's where you have this space
+
+277
+00:06:42,560 --> 00:06:46,000
+好的，現在這個空間被填滿了所有的零值
+
+278
+00:06:42,560 --> 00:06:46,000
+ okay right now the space is filled with all values of zero
+
+279
+00:06:46,000 --> 00:06:50,639
+但是隨著學習，這個空間可以被填充新的值，這基本上就是
+
+280
+00:06:46,000 --> 00:06:50,639
+ but then as you learn the space can be filled with new values that's that's basically
+
+281
+00:06:50,639 --> 00:06:52,880
+什麼是 2d 轉置
+
+282
+00:06:50,639 --> 00:06:52,880
+ what con 2d transpose is
+
+283
+00:06:52,880 --> 00:06:53,360
+好的
+
+284
+00:06:52,880 --> 00:06:53,360
+ okay
+
+285
+00:06:53,360 --> 00:06:57,840
+現在讓我們使用簡單的 Python 代碼來更好地理解這些差異
+
+286
+00:06:53,360 --> 00:06:57,840
+ so now let's use simple python code to understand the differences a bit better
+
+287
+00:06:57,840 --> 00:07:00,720
+那麼讓我們跳到我們的 Collab
+
+288
+00:06:57,840 --> 00:07:00,720
+ so let's jump on to our collab
+
+289
+00:07:00,720 --> 00:07:02,160
+這段代碼我將與你分享
+
+290
+00:07:00,720 --> 00:07:02,160
+ and this code i'm going to share
+
+291
+00:07:02,160 --> 00:07:03,520
+所以請注意
+
+292
+00:07:02,160 --> 00:07:03,520
+ so please pay attention to
+
+293
+00:07:03,520 --> 00:07:06,160
+我們現在正在討論的內容
+
+294
+00:07:03,520 --> 00:07:06,160
+ what we are talking right now
+
+295
+00:07:06,160 --> 00:07:09,360
+首先，我們來演示 2D 上採樣
+
+296
+00:07:06,160 --> 00:07:09,360
+ so first of all let's demonstrate up sampling 2d
+
+297
+00:07:09,360 --> 00:07:11,840
+然後我們可以進行 2D 轉置
+
+298
+00:07:09,360 --> 00:07:11,840
+ and then we can we can do con 2d transpose
+
+299
+00:07:11,840 --> 00:07:14,240
+為此，我將導入
+
+300
+00:07:11,840 --> 00:07:14,240
+ so for that i'm going to import
+
+301
+00:07:14,240 --> 00:07:15,599
+TensorFlow 序列
+
+302
+00:07:14,240 --> 00:07:15,599
+ tensorflow sequential
+
+303
+00:07:15,599 --> 00:07:18,560
+所以我們會建立一個小型模型
+
+304
+00:07:15,599 --> 00:07:18,560
+ so we'll create a small model
+
+305
+00:07:18,560 --> 00:07:20,160
+只有上採樣層
+
+306
+00:07:18,560 --> 00:07:20,160
+ only with up sampling layer
+
+307
+00:07:20,160 --> 00:07:20,639
+好的
+
+308
+00:07:20,160 --> 00:07:20,639
+ okay
+
+309
+00:07:20,639 --> 00:07:22,720
+所以這就是為什麼我們要進行上採樣
+
+310
+00:07:20,639 --> 00:07:22,720
+ so that's why let's go ahead and import up sampling
+
+311
+00:07:22,720 --> 00:07:23,840
+當然還有輸入
+
+312
+00:07:22,720 --> 00:07:23,840
+ and of course input
+
+313
+00:07:23,840 --> 00:07:25,360
+這樣我們就可以定義輸入
+
+314
+00:07:23,840 --> 00:07:25,360
+ so we can define the input
+
+315
+00:07:25,360 --> 00:07:27,360
+好的，我們的數據是什麼
+
+316
+00:07:25,360 --> 00:07:27,360
+ okay what's our data
+
+317
+00:07:27,360 --> 00:07:29,039
+通常我們處理的是影像
+
+318
+00:07:27,360 --> 00:07:29,039
+ normally we work with images
+
+319
+00:07:29,039 --> 00:07:31,520
+但在這種情況下，我們想要確切了解
+
+320
+00:07:29,039 --> 00:07:31,520
+ but in this case we want to understand exactly
+
+321
+00:07:31,520 --> 00:07:37,039
+什麼是取樣，讓我們定義一個三乘三像素的圖像
+
+322
+00:07:31,520 --> 00:07:37,039
+ what up sampling is so let's define our own image of three by three pixels
+
+323
+00:07:37,039 --> 00:07:38,400
+我填充了我們的圖像
+
+324
+00:07:37,039 --> 00:07:38,400
+ and i filled our image
+
+325
+00:07:38,400 --> 00:07:41,840
+或 numpy 陣列，值為一、二、三、四、五、六、七、八、九
+
+326
+00:07:38,400 --> 00:07:41,840
+ or numpy array with values of one two three four five six seven eight nine
+
+327
+00:07:41,840 --> 00:07:44,000
+這樣我們可以弄清楚是否有重複的內容
+
+328
+00:07:41,840 --> 00:07:44,000
+ so we can figure out if things are repeating
+
+329
+00:07:44,000 --> 00:07:44,479
+好的
+
+330
+00:07:44,000 --> 00:07:44,479
+ okay
+
+331
+00:07:44,479 --> 00:07:46,000
+所以這是我的 x
+
+332
+00:07:44,479 --> 00:07:46,000
+ so this is my x
+
+333
+00:07:46,000 --> 00:07:48,639
+這是我目前的圖像
+
+334
+00:07:46,000 --> 00:07:48,639
+ which is my image for now
+
+335
+00:07:48,639 --> 00:07:51,520
+什麼是影像？它只是 numpy 陣列對吧
+
+336
+00:07:48,639 --> 00:07:51,520
+ what is image it's just numpy array right
+
+337
+00:07:51,520 --> 00:07:53,199
+現在我要重塑它
+
+338
+00:07:51,520 --> 00:07:53,199
+ so now i'm going to reshape it
+
+339
+00:07:53,199 --> 00:07:56,160
+這樣它就可以以正確的形狀進入我的神經網絡
+
+340
+00:07:53,199 --> 00:07:56,160
+ so it's in the right shape to get into my neural network
+
+341
+00:07:56,160 --> 00:07:58,160
+所以我們來執行這一行
+
+342
+00:07:56,160 --> 00:07:58,160
+ so let's run this line
+
+343
+00:07:58,160 --> 00:08:00,000
+然後沿著這條線
+
+344
+00:07:58,160 --> 00:08:00,000
+ and then right along this line
+
+345
+00:08:00,000 --> 00:08:03,199
+所以我的形狀基本上是處理我的三乘三輸入
+
+346
+00:08:00,000 --> 00:08:03,199
+ so my shape is basically takes my three by three input
+
+347
+00:08:03,199 --> 00:08:05,919
+我有一張三乘三大小的圖片
+
+348
+00:08:03,199 --> 00:08:05,919
+ and i have one image of three by three size
+
+349
+00:08:05,919 --> 00:08:06,960
+它是單通道的
+
+350
+00:08:05,919 --> 00:08:06,960
+ and it is single channel
+
+351
+00:08:06,960 --> 00:08:08,319
+對，我沒有很多通道
+
+352
+00:08:06,960 --> 00:08:08,319
+ right i don't have many channels
+
+353
+00:08:08,319 --> 00:08:10,080
+就在那裡，那就是輸入的內容
+
+354
+00:08:08,319 --> 00:08:10,080
+ right there that's what the input is
+
+355
+00:08:10,080 --> 00:08:12,960
+這已經準備好進入我的神經網絡，一旦我定義好
+
+356
+00:08:10,080 --> 00:08:12,960
+ this is ready to go into my neural network once i define
+
+357
+00:08:12,960 --> 00:08:15,360
+那麼我的神經網絡是什麼
+
+358
+00:08:12,960 --> 00:08:15,360
+ it so what's my neural network
+
+359
+00:08:15,360 --> 00:08:16,240
+或我的模型
+
+360
+00:08:15,360 --> 00:08:16,240
+ or my model
+
+361
+00:08:16,240 --> 00:08:18,560
+那麼我將使用順序方法
+
+362
+00:08:16,240 --> 00:08:18,560
+ well i'm going to use sequential method
+
+363
+00:08:18,560 --> 00:08:20,560
+而我的輸入尺寸為這個
+
+364
+00:08:18,560 --> 00:08:20,560
+ and my input is of size this
+
+365
+00:08:20,560 --> 00:08:25,680
+這是三乘三乘一的大小，這是我的輸入
+
+366
+00:08:20,560 --> 00:08:25,680
+ which is three by three by one right off size this is my input
+
+367
+00:08:25,680 --> 00:08:26,240
+好的
+
+368
+00:08:25,680 --> 00:08:26,240
+ okay
+
+369
+00:08:26,240 --> 00:08:32,000
+然後我將添加一個大小為二乘二的上採樣層
+
+370
+00:08:26,240 --> 00:08:32,000
+ and then i'm going to add an up-sampling layer with a size of two by two
+
+371
+00:08:32,000 --> 00:08:36,000
+我們已經從圖像中看到，如果我們有
+
+372
+00:08:32,000 --> 00:08:36,000
+ so we already saw from the image that if we have
+
+373
+00:08:36,000 --> 00:08:38,000
+二乘二的上採樣
+
+374
+00:08:36,000 --> 00:08:38,000
+ a size of two by two up-sampling
+
+375
+00:08:38,000 --> 00:08:40,000
+或圖像尺寸加倍
+
+376
+00:08:38,000 --> 00:08:40,000
+ or image dimensions double
+
+377
+00:08:40,000 --> 00:08:42,000
+那麼我會期望的
+
+378
+00:08:40,000 --> 00:08:42,000
+ so what i'm going to expect
+
+379
+00:08:42,000 --> 00:08:48,000
+因此從這裡的結果是一六六一，它會加倍對吧
+
+380
+00:08:42,000 --> 00:08:48,000
+ as a result from here is one six six one it's going to double right the
+
+381
+00:08:48,000 --> 00:08:51,120
+每一個
+
+382
+00:08:48,000 --> 00:08:51,120
+ for each of these
+
+383
+00:08:51,120 --> 00:08:52,880
+所以讓我們繼續定義這個
+
+384
+00:08:51,120 --> 00:08:52,880
+ so let's go ahead and define this
+
+385
+00:08:52,880 --> 00:08:54,959
+我們馬上就會看到結果
+
+386
+00:08:52,880 --> 00:08:54,959
+ and we'll see the result in a second
+
+387
+00:08:54,959 --> 00:08:57,920
+所以這是我的模型摘要
+
+388
+00:08:54,959 --> 00:08:57,920
+ so here it is the summary of my model
+
+389
+00:08:57,920 --> 00:09:02,160
+你可以看到摘要已經顯示它將給我一個輸出
+
+390
+00:08:57,920 --> 00:09:02,160
+ you can see that the summary already that it's going to give me an output of
+
+391
+00:09:02,160 --> 00:09:07,600
+一張影像，這裡的“無”意味著我們有一張六乘六的單通道影像
+
+392
+00:09:02,160 --> 00:09:07,600
+ one image right none here means we have one image six by six single channel images
+
+393
+00:09:07,600 --> 00:09:13,040
+和有多少個參數來訓練零，沒有任何東西
+
+394
+00:09:07,600 --> 00:09:13,040
+ and how many parameters are there to train zero there is nothing again
+
+395
+00:09:13,040 --> 00:09:16,399
+讓我重複一次，這裡沒有需要訓練的東西
+
+396
+00:09:13,040 --> 00:09:16,399
+ let me repeat this up sampling there is nothing to train
+
+397
+00:09:16,399 --> 00:09:16,800
+好的
+
+398
+00:09:16,399 --> 00:09:16,800
+ okay
+
+399
+00:09:16,800 --> 00:09:20,240
+因此，值為零，訓練參數的數量
+
+400
+00:09:16,800 --> 00:09:20,240
+ so the value is zero number of trainable parameters
+
+401
+00:09:20,240 --> 00:09:23,360
+因此，如果你擔心增加可訓練參數的數量
+
+402
+00:09:20,240 --> 00:09:23,360
+ so if you are worried about increasing the number of trainable parameters
+
+403
+00:09:23,360 --> 00:09:28,880
+然後如果你的網路變慢，你可以繼續使用上採樣
+
+404
+00:09:23,360 --> 00:09:28,880
+ and then make your making your network slow you can go ahead and use up sampling
+
+405
+00:09:28,880 --> 00:09:33,200
+但始終記住，上採樣作為unit的一部分是會被應用的
+
+406
+00:09:28,880 --> 00:09:33,200
+ but then always remember this up sampling as part of a unit is applied
+
+407
+00:09:33,200 --> 00:09:35,200
+在卷積操作之後
+
+408
+00:09:33,200 --> 00:09:35,200
+ after a convolution operation
+
+409
+00:09:35,200 --> 00:09:38,880
+所以這並不是說你會大幅增加它
+
+410
+00:09:35,200 --> 00:09:38,880
+ so it's not like you are increasing it dramatically
+
+411
+00:09:38,880 --> 00:09:41,760
+使用卷積 2d 轉置，你擁有卷積
+
+412
+00:09:38,880 --> 00:09:41,760
+ with convolution 2d transpose you have the convolution
+
+413
+00:09:41,760 --> 00:09:43,600
+和轉置類似的內建功能
+
+414
+00:09:41,760 --> 00:09:43,600
+ and transpose kind of built in
+
+415
+00:09:43,600 --> 00:09:45,040
+所以
+
+416
+00:09:43,600 --> 00:09:45,040
+ so
+
+417
+00:09:45,040 --> 00:09:50,399
+所以你仍然需要訓練幾乎相同數量的
+
+418
+00:09:45,040 --> 00:09:50,399
+ so you still have to train almost similar number of
+
+419
+00:09:50,399 --> 00:09:52,000
+參數
+
+420
+00:09:50,399 --> 00:09:52,000
+ of of parameters
+
+421
+00:09:52,000 --> 00:09:52,640
+好的
+
+422
+00:09:52,000 --> 00:09:52,640
+ okay
+
+423
+00:09:52,640 --> 00:09:57,920
+到目前為止我們什麼都沒做，我們只是將我們的影像定義為三乘三的矩陣，並重新塑造它
+
+424
+00:09:52,640 --> 00:09:57,920
+ so far we have done nothing we just defined our image as three by three matrix reshaped it
+
+425
+00:09:57,920 --> 00:10:00,560
+我們定義了我們的模型為接收一些輸入
+
+426
+00:09:57,920 --> 00:10:00,560
+ and we defined our model as taking some input
+
+427
+00:10:00,560 --> 00:10:04,480
+然後是上採樣層，讓我們將這個模型應用到我們的圖像上
+
+428
+00:10:00,560 --> 00:10:04,480
+ and then just up sampling layer let's apply this model onto our image
+
+429
+00:10:04,480 --> 00:10:08,000
+你怎麼做到這點？其實就是使用 model.predict 對吧
+
+430
+00:10:04,480 --> 00:10:08,000
+ how do you do that well it's just that model.predict right
+
+431
+00:10:08,000 --> 00:10:12,160
+所以我們使用這個模型對原始影像進行預測
+
+432
+00:10:08,000 --> 00:10:12,160
+ so we are predicting with this model onto our original image
+
+433
+00:10:12,160 --> 00:10:13,600
+所以 x 是我們的輸入
+
+434
+00:10:12,160 --> 00:10:13,600
+ so x is our input
+
+435
+00:10:13,600 --> 00:10:15,600
+所以當你這樣做時，我們繼續
+
+436
+00:10:13,600 --> 00:10:15,600
+ so when you do that let's go ahead
+
+437
+00:10:15,600 --> 00:10:17,600
+並列印出來
+
+438
+00:10:15,600 --> 00:10:17,600
+ and print out
+
+439
+00:10:17,600 --> 00:10:21,680
+原始輸入是 一 二 三 四 五 六 七 八 九 我們知道
+
+440
+00:10:17,600 --> 00:10:21,680
+ the original input is one two three four five six seven eight nine we know that
+
+441
+00:10:21,680 --> 00:10:22,720
+和上採樣的
+
+442
+00:10:21,680 --> 00:10:22,720
+ and the upsampled
+
+443
+00:10:22,720 --> 00:10:25,200
+這是來自的輸出
+
+444
+00:10:22,720 --> 00:10:25,200
+ which is the output from from
+
+445
+00:10:25,200 --> 00:10:30,880
+或者來自我們的 model.predict 是一一二二三三一一二二三三和
+
+446
+00:10:25,200 --> 00:10:30,880
+ or from our model.predict is one one two two three three one one two two three three and
+
+447
+00:10:30,880 --> 00:10:35,600
+四四五五六六，這與我展示給你的紅色粉紅色黃色盒子非常相似
+
+448
+00:10:30,880 --> 00:10:35,600
+ four four five five six six this is very similar to the red pink yellow boxes i showed you
+
+449
+00:10:35,600 --> 00:10:39,600
+每一個，如果其中一個是紅色盒子，它會重複四次
+
+450
+00:10:35,600 --> 00:10:39,600
+ each one of those if one is the red box it's repeated four times
+
+451
+00:10:39,600 --> 00:10:42,560
+這是上採樣，就這樣，所以這就是我的做法
+
+452
+00:10:39,600 --> 00:10:42,560
+ this is up sampling that's it so this is how i go
+
+453
+00:10:42,560 --> 00:10:46,000
+從較小的圖像到較大的尺寸
+
+454
+00:10:42,560 --> 00:10:46,000
+ from an image that's smaller to a larger size
+
+455
+00:10:46,000 --> 00:10:49,040
+正如你所見，這實際上不是一個很好的方法
+
+456
+00:10:46,000 --> 00:10:49,040
+ as you can see this is not a great way of actually
+
+457
+00:10:49,040 --> 00:10:52,560
+使你的原始影像解析度恢復正確
+
+458
+00:10:49,040 --> 00:10:52,560
+ getting your original image resolution back right
+
+459
+00:10:52,560 --> 00:10:52,959
+我的意思是
+
+460
+00:10:52,560 --> 00:10:52,959
+ i mean
+
+461
+00:10:52,959 --> 00:10:55,760
+你在這裡失去了影像解析度
+
+462
+00:10:52,959 --> 00:10:55,760
+ you are losing image resolution here
+
+463
+00:10:55,760 --> 00:10:59,600
+這正是為什麼在 unit 中連接非常重要
+
+464
+00:10:55,760 --> 00:10:59,600
+ this is exactly why in unit concatenation is very important
+
+465
+00:10:59,600 --> 00:11:01,519
+從早期的卷積網絡
+
+466
+00:10:59,600 --> 00:11:01,519
+ from the earlier convolutional
+
+467
+00:11:01,519 --> 00:11:05,120
+encoder 層卷積層到 decoder 層
+
+468
+00:11:01,519 --> 00:11:05,120
+ encoder layers convolutional layers to the decoder layers
+
+469
+00:11:05,120 --> 00:11:05,760
+好的
+
+470
+00:11:05,120 --> 00:11:05,760
+ okay
+
+471
+00:11:05,760 --> 00:11:08,480
+現在讓我們看看 2d 轉置實際上是如何工作的
+
+472
+00:11:05,760 --> 00:11:08,480
+ now let's see how con 2d transpose actually works
+
+473
+00:11:08,480 --> 00:11:09,120
+好的
+
+474
+00:11:08,480 --> 00:11:09,120
+ okay
+
+475
+00:11:09,120 --> 00:11:11,040
+那麼我們來做一個類似的
+
+476
+00:11:09,120 --> 00:11:11,040
+ so let's work on a similar
+
+477
+00:11:11,040 --> 00:11:15,760
+幾乎完全相同的例子，只是這次我不是進行上採樣，而是將 con 進口到 d 轉置
+
+478
+00:11:11,040 --> 00:11:15,760
+ pretty much the same example except instead of up sampling i'm importing con to d transpose here
+
+479
+00:11:15,760 --> 00:11:19,040
+好的，所以其他的完全相同
+
+480
+00:11:15,760 --> 00:11:19,040
+ okay so everything else is exactly the same
+
+481
+00:11:19,040 --> 00:11:24,480
+然後在我的模型中，我將使用 con 2d transpose 來代替上採樣
+
+482
+00:11:19,040 --> 00:11:24,480
+ and then in my model instead of up sampling i'm going to use con 2d transpose
+
+483
+00:11:24,480 --> 00:11:27,279
+讓我們使用我之前給你的相同示例
+
+484
+00:11:24,480 --> 00:11:27,279
+ and let's use the same example i gave you earlier
+
+485
+00:11:27,279 --> 00:11:32,320
+即一乘一的卷積核大小和二乘二的步幅
+
+486
+00:11:27,279 --> 00:11:32,320
+ which is one by one kernel size and a stride of two by two
+
+487
+00:11:32,320 --> 00:11:35,200
+現在這一點很重要，當我設置內核初始化器時
+
+488
+00:11:32,320 --> 00:11:35,200
+ now this is important when i put kernel initializer
+
+489
+00:11:35,200 --> 00:11:38,079
+等於一次，這意味著它初始化
+
+490
+00:11:35,200 --> 00:11:38,079
+ equal to once that means it initializes
+
+491
+00:11:38,079 --> 00:11:41,360
+我內核中的所有值為一
+
+492
+00:11:38,079 --> 00:11:41,360
+ all values in my kernel with a value of one
+
+493
+00:11:41,360 --> 00:11:44,399
+這等同於重量等於 1
+
+494
+00:11:41,360 --> 00:11:44,399
+ this is equivalent to the weight equals to 1
+
+495
+00:11:44,399 --> 00:11:50,800
+這意味著如果我有這樣的輸入圖像，它會將每個值乘以 1
+
+496
+00:11:44,399 --> 00:11:50,800
+ which means if i have a input image of this it's going to multiply each value by 1
+
+497
+00:11:50,800 --> 00:11:55,600
+所以我們的值不會改變，我們將再次看到這個效果，我之前談到過
+
+498
+00:11:50,800 --> 00:11:55,600
+ so our values don't change we'll we'll see the effect of this again i talked about
+
+499
+00:11:55,600 --> 00:11:58,160
+視頻中的核心初始化器
+
+500
+00:11:55,600 --> 00:11:58,160
+ kernel initializers in a video again
+
+501
+00:11:58,160 --> 00:12:00,959
+如果你還沒看過那個，我強烈推薦你去看看
+
+502
+00:11:58,160 --> 00:12:00,959
+ if you haven't watched that i definitely recommend doing that
+
+503
+00:12:00,959 --> 00:12:05,600
+如果你不定義這個，那麼 Keras 將使用默認值
+
+504
+00:12:00,959 --> 00:12:05,600
+ if you don't define this then keras is going to use a default
+
+505
+00:12:05,600 --> 00:12:07,040
+初始化權重的方式
+
+506
+00:12:05,600 --> 00:12:07,040
+ way of initializing weights
+
+507
+00:12:07,040 --> 00:12:10,639
+我相信這是一種常態分佈隨機分佈
+
+508
+00:12:07,040 --> 00:12:10,639
+ which is i believe some normal distribution random distribution
+
+509
+00:12:10,639 --> 00:12:14,240
+那麼，隨機初始化會有一些變異
+
+510
+00:12:10,639 --> 00:12:14,240
+ well random initialization with some sort of a variance
+
+511
+00:12:14,240 --> 00:12:14,959
+好的
+
+512
+00:12:14,240 --> 00:12:14,959
+ okay
+
+513
+00:12:14,959 --> 00:12:18,079
+那麼我們來定義這個模型
+
+514
+00:12:14,959 --> 00:12:18,079
+ so let's go ahead and define this model
+
+515
+00:12:18,079 --> 00:12:21,120
+和一件事，好，這很重要
+
+516
+00:12:18,079 --> 00:12:21,120
+ and one thing okay this is important to see
+
+517
+00:12:21,120 --> 00:12:24,240
+現在我的步幅是二乘二
+
+518
+00:12:21,120 --> 00:12:24,240
+ now my stride is a two by two
+
+519
+00:12:24,240 --> 00:12:26,639
+而我的卷積核大小是 一乘一，對吧
+
+520
+00:12:24,240 --> 00:12:26,639
+ and my kernel size is one by one right
+
+521
+00:12:26,639 --> 00:12:27,600
+所以
+
+522
+00:12:26,639 --> 00:12:27,600
+ so
+
+523
+00:12:27,600 --> 00:12:30,720
+這是總結，我的輸出將會是
+
+524
+00:12:27,600 --> 00:12:30,720
+ this is the summary here my output is going to be
+
+525
+00:12:30,720 --> 00:12:34,079
+六乘六乘一的尺寸，完全相同的大小
+
+526
+00:12:30,720 --> 00:12:34,079
+ the size of six by six by one exactly the same size
+
+527
+00:12:34,079 --> 00:12:37,279
+就像我們如果放大它的話
+
+528
+00:12:34,079 --> 00:12:37,279
+ as we if we upscaled it
+
+529
+00:12:37,279 --> 00:12:38,320
+完全相同的大小
+
+530
+00:12:37,279 --> 00:12:38,320
+ exactly the same size
+
+531
+00:12:38,320 --> 00:12:39,360
+因為
+
+532
+00:12:38,320 --> 00:12:39,360
+ because
+
+533
+00:12:39,360 --> 00:12:42,480
+再次，步幅是，對不起，我們的步幅是兩步兩步，那正是
+
+534
+00:12:39,360 --> 00:12:42,480
+ again stride is sorry our stride is two by two that's exactly
+
+535
+00:12:42,480 --> 00:12:44,000
+為什麼我們有六六一
+
+536
+00:12:42,480 --> 00:12:44,000
+ why we have six six one
+
+537
+00:12:44,000 --> 00:12:47,920
+但這裡的關鍵點是查看被訓練的參數數量
+
+538
+00:12:44,000 --> 00:12:47,920
+ but the key point here is see the number of parameters that are trained
+
+539
+00:12:47,920 --> 00:12:51,440
+作為我們神經網絡訓練的一部分可訓練
+
+540
+00:12:47,920 --> 00:12:51,440
+ trainable as part of our neural network training
+
+541
+00:12:51,440 --> 00:12:55,200
+這是兩個參數，為什麼要一一查看內核大小
+
+542
+00:12:51,440 --> 00:12:55,200
+ it's two parameters why look at the kernel size one by one
+
+543
+00:12:55,200 --> 00:12:57,360
+這意味著只有一個值
+
+544
+00:12:55,200 --> 00:12:57,360
+ what does that mean there is one value
+
+545
+00:12:57,360 --> 00:13:00,560
+這意味著它正在嘗試學習，這是權重
+
+546
+00:12:57,360 --> 00:13:00,560
+ that it's trying to learn this is the weight
+
+547
+00:13:00,560 --> 00:13:05,360
+另一個是偏差，記住人工神經元總是有一個權重
+
+548
+00:13:00,560 --> 00:13:05,360
+ and the other one is the bias remember artificial neuron there is always a weight
+
+549
+00:13:05,360 --> 00:13:06,560
+和一個偏差對吧
+
+550
+00:13:05,360 --> 00:13:06,560
+ and a bias right
+
+551
+00:13:06,560 --> 00:13:11,040
+如果有一個神經元，那麼你有兩個可訓練的參數，一個權重
+
+552
+00:13:06,560 --> 00:13:11,040
+ so if there is one neuron then you have two trainable parameters one weight
+
+553
+00:13:11,040 --> 00:13:17,120
+而且這正是為什麼你有那裡的兩個參數，如果我改變我的核心
+
+554
+00:13:11,040 --> 00:13:17,120
+ and one bias that's exactly why you have two parameters right there if i change my kernel
+
+555
+00:13:17,120 --> 00:13:21,760
+我認為這是一個非常有教育意義的練習，對不起，兩兩來做這個
+
+556
+00:13:17,120 --> 00:13:21,760
+ to i think it's a very educational exercise to do this sorry two by two
+
+557
+00:13:21,760 --> 00:13:23,200
+然後再次運行這個
+
+558
+00:13:21,760 --> 00:13:23,200
+ and then run this again
+
+559
+00:13:23,200 --> 00:13:27,040
+我的參數數量將是五個，仍然是六個六
+
+560
+00:13:23,200 --> 00:13:27,040
+ my number of parameters are going to be five it's still six six
+
+561
+00:13:27,040 --> 00:13:29,360
+因為我的步伐是兩兩一組
+
+562
+00:13:27,040 --> 00:13:29,360
+ because my strides are two by two
+
+563
+00:13:29,360 --> 00:13:33,839
+好的，但可訓練的參數數量是五，為什麼
+
+564
+00:13:29,360 --> 00:13:33,839
+ okay but number of trainable parameters is five why
+
+565
+00:13:33,839 --> 00:13:35,440
+因為如果是兩兩一組
+
+566
+00:13:33,839 --> 00:13:35,440
+ because if it is two by two
+
+567
+00:13:35,440 --> 00:13:36,560
+我有多少個
+
+568
+00:13:35,440 --> 00:13:36,560
+ how many do i have
+
+569
+00:13:36,560 --> 00:13:39,839
+多少個權重，四個，對，兩兩一組
+
+570
+00:13:36,560 --> 00:13:39,839
+ how many weights four right two by two
+
+571
+00:13:39,839 --> 00:13:43,279
+所以我有四個權重，網絡需要訓練
+
+572
+00:13:39,839 --> 00:13:43,279
+ so i have four weights that the network needs to train
+
+573
+00:13:43,279 --> 00:13:46,160
+在訓練過程中加上一個偏差
+
+574
+00:13:43,279 --> 00:13:46,160
+ during the training process plus one bias
+
+575
+00:13:46,160 --> 00:13:46,959
+為了它
+
+576
+00:13:46,160 --> 00:13:46,959
+ for it
+
+577
+00:13:46,959 --> 00:13:47,279
+好的
+
+578
+00:13:46,959 --> 00:13:47,279
+ yeah
+
+579
+00:13:47,279 --> 00:13:50,240
+所以你有四加一等於五，這就是為什麼你有五
+
+580
+00:13:47,279 --> 00:13:50,240
+ so so you have four plus one five that's why you have five
+
+581
+00:13:50,240 --> 00:13:52,720
+所以我猜也許你知道
+
+582
+00:13:50,240 --> 00:13:52,720
+ so i guess probably you know
+
+583
+00:13:52,720 --> 00:13:56,399
+當你使用三乘三的核時會發生什麼
+
+584
+00:13:52,720 --> 00:13:56,399
+ what to expect when you have three by three kernel
+
+585
+00:13:56,399 --> 00:13:59,680
+好的，正確
+
+586
+00:13:56,399 --> 00:13:59,680
+ okay exactly
+
+587
+00:14:00,160 --> 00:14:05,360
+如果你有三乘三，那就是九對吧，九加一，十個參數
+
+588
+00:14:00,160 --> 00:14:05,360
+ if you have three by three that's nine right nine plus one ten parameters
+
+589
+00:14:05,360 --> 00:14:08,240
+那麼我們回到逐一處理
+
+590
+00:14:05,360 --> 00:14:08,240
+ so let's go back to one by one
+
+591
+00:14:08,240 --> 00:14:09,839
+逐一處理是我們想要的
+
+592
+00:14:08,240 --> 00:14:09,839
+ one by one is what we want
+
+593
+00:14:09,839 --> 00:14:13,279
+那麼我們繼續進行應用，好的，這就是我們所在的位置
+
+594
+00:14:09,839 --> 00:14:13,279
+ and let's go ahead and apply this okay so this is where we are
+
+595
+00:14:13,279 --> 00:14:14,079
+現在
+
+596
+00:14:13,279 --> 00:14:14,079
+ and now
+
+597
+00:14:14,079 --> 00:14:15,920
+讓我們應用這個模型 dot predict
+
+598
+00:14:14,079 --> 00:14:15,920
+ let's apply that model dot predict
+
+599
+00:14:15,920 --> 00:14:19,680
+我稱這個模型為 one right，model one dot predict 在我們的輸入數據上
+
+600
+00:14:15,920 --> 00:14:19,680
+ i call this model one right model one dot predict on our input data
+
+601
+00:14:19,680 --> 00:14:22,880
+現在我們來印出所有轉置過的數據
+
+602
+00:14:19,680 --> 00:14:22,880
+ and let's go ahead and print out all the transposed
+
+603
+00:14:22,880 --> 00:14:24,639
+以及那些上採樣值
+
+604
+00:14:22,880 --> 00:14:24,639
+ and up sample values right there
+
+605
+00:14:24,639 --> 00:14:25,680
+所以
+
+606
+00:14:24,639 --> 00:14:25,680
+ so
+
+607
+00:14:25,680 --> 00:14:26,959
+我的原始輸入
+
+608
+00:14:25,680 --> 00:14:26,959
+ my original input
+
+609
+00:14:26,959 --> 00:14:28,480
+和轉置的
+
+610
+00:14:26,959 --> 00:14:28,480
+ and the transposed
+
+611
+00:14:28,480 --> 00:14:31,199
+卷積未
+
+612
+00:14:28,480 --> 00:14:31,199
+ conv not
+
+613
+00:14:42,959 --> 00:14:45,440
+由於步幅為一，因此不會有任何零值
+
+614
+00:14:42,959 --> 00:14:45,440
+ by one stride available there won't be any zeros
+
+615
+00:14:45,440 --> 00:14:48,480
+和你有值讓我們
+
+616
+00:14:45,440 --> 00:14:48,480
+ and you have values let's
+
+617
+00:14:48,480 --> 00:14:50,480
+一個一個做
+
+618
+00:14:48,480 --> 00:14:50,480
+ do one by one
+
+619
+00:14:50,480 --> 00:14:55,600
+所以當你一個一個做時，這意味著你的輸出形狀也是三個
+
+620
+00:14:50,480 --> 00:14:55,600
+ so when you do one by one that means your output shape is also three
+
+621
+00:14:55,600 --> 00:14:57,279
+同原始輸入相同
+
+622
+00:14:55,600 --> 00:14:57,279
+ same as original input
+
+623
+00:14:57,279 --> 00:15:02,320
+所以那裡沒有任何變化，我們也做另一件事
+
+624
+00:14:57,279 --> 00:15:02,320
+ so there's nothing changing right there let's also do one other thing
+
+625
+00:15:02,320 --> 00:15:05,760
+我們來移除內核初始化部分
+
+626
+00:15:02,320 --> 00:15:05,760
+ let's remove the kernel initializer part
+
+627
+00:15:05,760 --> 00:15:06,320
+和查看
+
+628
+00:15:05,760 --> 00:15:06,320
+ and see
+
+629
+00:15:06,320 --> 00:15:10,720
+輸出結果應該是這樣的，這部分應該完全一樣，我們不會改變任何東西
+
+630
+00:15:06,320 --> 00:15:10,720
+ how the output looks like this part should look exactly the same we're not changing anything
+
+631
+00:15:10,720 --> 00:15:15,360
+但當我們將它應用到圖像上時，我們會在這裡看到一些奇怪的數字
+
+632
+00:15:10,720 --> 00:15:15,360
+ but when we apply that onto our image we'll see some weird numbers right here
+
+633
+00:15:15,360 --> 00:15:17,040
+為什麼我們會看到這些奇怪的數字
+
+634
+00:15:15,360 --> 00:15:17,040
+ why are we seeing these weird numbers
+
+635
+00:15:17,040 --> 00:15:20,160
+因為這是隨機初始化的
+
+636
+00:15:17,040 --> 00:15:20,160
+ because this is randomly initialized
+
+637
+00:15:20,160 --> 00:15:22,000
+權重不再是 1
+
+638
+00:15:20,160 --> 00:15:22,000
+ the weights are no more one
+
+639
+00:15:22,000 --> 00:15:25,680
+所以顯然權重變成了 0.96
+
+640
+00:15:22,000 --> 00:15:25,680
+ so apparently the weights turned out to be 0.96
+
+641
+00:15:25,680 --> 00:15:26,560
+在該位置
+
+642
+00:15:25,680 --> 00:15:26,560
+ at that location
+
+643
+00:15:26,560 --> 00:15:29,199
+所以 1 乘以 0.96 等於 0.96
+
+644
+00:15:26,560 --> 00:15:29,199
+ so 1 times 0.96 is 0.96
+
+645
+00:15:29,199 --> 00:15:32,160
+這裡的重量大約是 0.8
+
+646
+00:15:29,199 --> 00:15:32,160
+ the weight here is somewhere around 0.8
+
+647
+00:15:32,160 --> 00:15:35,600
+這裡得到的結果是某個東西乘以 2
+
+648
+00:15:32,160 --> 00:15:35,600
+ something multiplied by 2 is what you get right here
+
+649
+00:15:35,600 --> 00:15:36,079
+好的
+
+650
+00:15:35,600 --> 00:15:36,079
+ okay
+
+651
+00:15:36,079 --> 00:15:39,600
+所以你的權重在 0 的範圍內隨機生成
+
+652
+00:15:36,079 --> 00:15:39,600
+ so your weights are randomly generated between values of 0
+
+653
+00:15:39,600 --> 00:15:40,399
+和 1
+
+654
+00:15:39,600 --> 00:15:40,399
+ and 1
+
+655
+00:15:40,399 --> 00:15:43,199
+然後乘以你這裡擁有的數字
+
+656
+00:15:40,399 --> 00:15:43,199
+ and then multiplying by whatever you have here
+
+657
+00:15:43,199 --> 00:15:46,720
+然後你會得到這個，這就是為什麼 con 2d 我希望
+
+658
+00:15:43,199 --> 00:15:46,720
+ and then you get this this is why con 2d i hope
+
+659
+00:15:46,720 --> 00:15:51,680
+我希望這解釋了 con 2d，這裡我通過一次初始化內核
+
+660
+00:15:46,720 --> 00:15:51,680
+ i hope this explains the con 2d here i'm initializing the kernel by once
+
+661
+00:15:51,680 --> 00:15:52,959
+所以
+
+662
+00:15:51,680 --> 00:15:52,959
+ so
+
+663
+00:15:52,959 --> 00:15:58,079
+你的輸出將會和輸入一模一樣，只是多了一些空格
+
+664
+00:15:52,959 --> 00:15:58,079
+ your output is going to look identical to input with extra spaces
+
+665
+00:15:58,079 --> 00:16:01,360
+因為我們只是把這些乘以一
+
+666
+00:15:58,079 --> 00:16:01,360
+ because we are just multiplying these with ones
+
+667
+00:16:01,360 --> 00:16:03,519
+非常好的練習，尤其是
+
+668
+00:16:01,360 --> 00:16:03,519
+ very great exercise especially
+
+669
+00:16:03,519 --> 00:16:07,920
+如果您對這個神經網絡主題不熟悉，這些小細節將
+
+670
+00:16:03,519 --> 00:16:07,920
+ if you are new to this neural network topic these little things will
+
+671
+00:16:07,920 --> 00:16:14,000
+當您執行內核初始化程序時，這些小細節將真正提供有關發生什麼事的深入了解
+
+672
+00:16:07,920 --> 00:16:14,000
+ will really provide a lot of insight into exactly what's going on when you do kernel initializer
+
+673
+00:16:14,000 --> 00:16:16,480
+等於正常，例如
+
+674
+00:16:14,000 --> 00:16:16,480
+ equal to he normal for example
+
+675
+00:16:16,480 --> 00:16:17,680
+我覺得或嘿，正常
+
+676
+00:16:16,480 --> 00:16:17,680
+ i think or hey normal
+
+677
+00:16:17,680 --> 00:16:20,560
+如果你是那個 hg
+
+678
+00:16:17,680 --> 00:16:20,560
+ if you is that hg
+
+679
+00:16:20,560 --> 00:16:23,920
+嘿，正常，我覺得那就是你拼寫的方式，是的
+
+680
+00:16:20,560 --> 00:16:23,920
+ hey normal i think that's how you spell it yeah
+
+681
+00:16:23,920 --> 00:16:25,920
+然後當你
+
+682
+00:16:23,920 --> 00:16:25,920
+ and then when you
+
+683
+00:16:25,920 --> 00:16:27,519
+然後你可以看到那裡的權重
+
+684
+00:16:25,920 --> 00:16:27,519
+ and then you see the weights right there
+
+685
+00:16:27,519 --> 00:16:32,880
+是的，你可以將原始輸入定義為全為一，以觀察權重的分佈情況
+
+686
+00:16:27,519 --> 00:16:32,880
+ yeah you can define your original input as all ones to see how the distribution of weights happens
+
+687
+00:16:32,880 --> 00:16:34,480
+然後你可以，那是一個，那是一個
+
+688
+00:16:32,880 --> 00:16:34,480
+ and then you can that's a that's
+
+689
+00:16:34,480 --> 00:16:38,240
+那只是一個獨立的講座，所以現在你會知道
+
+690
+00:16:34,480 --> 00:16:38,240
+ that's just separate lecture by itself right so now you'll know
+
+691
+00:16:38,240 --> 00:16:42,560
+這些分佈的重點，你知道的就在那裡
+
+692
+00:16:38,240 --> 00:16:42,560
+ the importance of you know these distributions right there
+
+693
+00:16:42,560 --> 00:16:42,959
+好的
+
+694
+00:16:42,560 --> 00:16:42,959
+ okay
+
+695
+00:16:42,959 --> 00:16:44,240
+所以我
+
+696
+00:16:42,959 --> 00:16:44,240
+ so i
+
+697
+00:16:44,240 --> 00:16:49,519
+至少希望你知道在這種情況下內核初始化器在做什麼，但更重要的是
+
+698
+00:16:44,240 --> 00:16:49,519
+ at least hope you know what kernel initializer is doing in this case but more importantly
+
+699
+00:16:49,519 --> 00:16:52,320
+什麼是上採樣
+
+700
+00:16:49,519 --> 00:16:52,320
+ what up sampling means
+
+701
+00:16:52,320 --> 00:16:53,279
+和
+
+702
+00:16:52,320 --> 00:16:53,279
+ and
+
+703
+00:16:53,279 --> 00:16:57,600
+對不起，讓我們執行這個，這樣我們可以查看這裡的相同內容
+
+704
+00:16:53,279 --> 00:16:57,600
+ what sorry let's run this so we can look at the same thing here
+
+705
+00:16:57,600 --> 00:16:58,079
+好的
+
+706
+00:16:57,600 --> 00:16:58,079
+ okay
+
+707
+00:16:58,079 --> 00:17:00,800
+至少現在你知道升頻的區別了
+
+708
+00:16:58,079 --> 00:17:00,800
+ so at least now you know the difference between up sampling
+
+709
+00:17:00,800 --> 00:17:04,319
+和可轉置地正常處理
+
+710
+00:17:00,800 --> 00:17:04,319
+ and convertibly transposed normally
+
+711
+00:17:04,319 --> 00:17:06,559
+我 我
+
+712
+00:17:04,319 --> 00:17:06,559
+ i i
+
+713
+00:17:06,559 --> 00:17:08,400
+我差點說我會用完樣本
+
+714
+00:17:06,559 --> 00:17:08,400
+ i almost said i would use up sample
+
+715
+00:17:08,400 --> 00:17:11,679
+但最近我一直在使用 con 2d 轉置
+
+716
+00:17:08,400 --> 00:17:11,679
+ but lately i've been using con 2d transpose
+
+717
+00:17:11,679 --> 00:17:17,359
+而且我沒有看到結果上有任何明顯的差異
+
+718
+00:17:11,679 --> 00:17:17,359
+ and i haven't seen any visible difference in the results
+
+719
+00:17:17,359 --> 00:17:18,240
+開啟 開啟
+
+720
+00:17:17,359 --> 00:17:18,240
+ on on
+
+721
+00:17:18,240 --> 00:17:22,160
+我所處理的一小部分數據集上，但至少這是重要的
+
+722
+00:17:18,240 --> 00:17:22,160
+ on a handful of data sets that i worked with but at least it's important
+
+723
+00:17:22,160 --> 00:17:26,160
+讓你知道差異在哪裡，我希望這段視頻能達成這個任務
+
+724
+00:17:22,160 --> 00:17:26,160
+ for you to know what the difference is and i hope this video achieves that task
+
+725
+00:17:26,160 --> 00:17:27,919
+請繼續訂閱這段視頻
+
+726
+00:17:26,160 --> 00:17:27,919
+ please go ahead and subscribe to this video
+
+727
+00:17:27,919 --> 00:17:30,320
+在下一個部分讓我們繼續這些討論
+
+728
+00:17:27,919 --> 00:17:30,320
+ and in the next one let's continue these discussions
+
+729
+00:17:30,320 --> 00:17:36,000
+這樣最終我們積累足夠的知識以進行二元語義分割
+
+730
+00:17:30,320 --> 00:17:36,000
+ so eventually we build up enough knowledge to perform semantic segmentation on binary
+
+731
+00:17:36,000 --> 00:17:37,120
+和多類別
+
+732
+00:17:36,000 --> 00:17:37,120
+ and multi-class
+
+733
+00:17:37,120 --> 00:17:39,039
+和 3D 多類別
+
+734
+00:17:37,120 --> 00:17:39,039
+ and 3d multi-class
+
+735
+00:17:39,039 --> 00:17:40,160
+數據集，謝謝大家
+
+736
+00:17:39,039 --> 00:17:40,160
+ data sets thank you guys
+

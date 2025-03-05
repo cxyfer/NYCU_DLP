@@ -1,0 +1,664 @@
+1
+00:00:00,260 --> 00:00:07,680
+welcome to our presentation we designed a deep convolutional net work for the segmentation of biomechanical images
+
+2
+00:00:00,260 --> 00:00:07,680
+歡迎來到我們的簡報。我們設計了一個深度卷積網絡，用於生物力學影像的分割
+
+3
+00:00:07,680 --> 00:00:12,240
+ which we called unit it learns to signal images in an end-to-end setting
+
+4
+00:00:07,680 --> 00:00:12,240
+我們稱之為單元，它學會在端到端設置中對圖像發出信號
+
+5
+00:00:12,240 --> 00:00:14,099
+ which means a raw image in
+
+6
+00:00:12,240 --> 00:00:14,099
+這意味著原始圖像在
+
+7
+00:00:14,099 --> 00:00:16,830
+ and ready segmentation map out the
+
+8
+00:00:14,099 --> 00:00:16,830
+和準備好的分割圖
+
+9
+00:00:16,830 --> 00:00:21,480
+ main challenges were that we had only around 30 annotated images per application
+
+10
+00:00:16,830 --> 00:00:21,480
+主要挑戰在於每個應用程式只有約 30 張註解圖片
+
+11
+00:00:21,480 --> 00:00:22,619
+ and we
+
+12
+00:00:21,480 --> 00:00:22,619
+和我們
+
+13
+00:00:22,619 --> 00:00:28,699
+ nearly always have touching objects of the same class that need to be separated by the segmentation algorithm
+
+14
+00:00:22,619 --> 00:00:28,699
+幾乎總是有相同類別的接觸物體需要由分割算法進行分離
+
+15
+00:00:28,699 --> 00:00:33,480
+ here is the architecture of our unit like all other commercial
+
+16
+00:00:28,699 --> 00:00:33,480
+這是我們單元的架構，像所有其他商業網路一樣
+
+17
+00:00:33,480 --> 00:00:37,710
+ networks it consists of a large number of different operations illustrated
+
+18
+00:00:33,480 --> 00:00:37,710
+它由大量不同的操作組成，如這些小箭頭所示
+
+19
+00:00:37,710 --> 00:00:42,780
+ by these small arrows the input image is fed into the network here at the beginning then
+
+20
+00:00:37,710 --> 00:00:42,780
+輸入影像在這裡的開始處進入網路，然後
+
+21
+00:00:42,780 --> 00:00:44,160
+ the data is propagated
+
+22
+00:00:42,780 --> 00:00:44,160
+資料被傳播
+
+23
+00:00:44,160 --> 00:00:48,690
+ through the network along all possible paths and at the end the ready segmentation
+
+24
+00:00:44,160 --> 00:00:48,690
+通過網絡沿所有可能的路徑傳播，最終得到準備好的分割
+
+25
+00:00:48,690 --> 00:00:51,000
+ map comes out each
+
+26
+00:00:48,690 --> 00:00:51,000
+地圖會顯示出來
+
+27
+00:00:51,000 --> 00:00:55,680
+ blue box corresponds to a multi-channel feature web the xy size is denoted
+
+28
+00:00:51,000 --> 00:00:55,680
+藍色框對應於多通道特徵，xy 大小在此標示
+
+29
+00:00:55,680 --> 00:00:59,539
+ here and the number of featured channels is denoted here
+
+30
+00:00:55,680 --> 00:00:59,539
+此處標示了特徵通道的數量
+
+31
+00:00:59,539 --> 00:01:02,940
+ most of the operations are compilations followed
+
+32
+00:00:59,539 --> 00:01:02,940
+大部分操作是隨後的編譯
+
+33
+00:01:02,940 --> 00:01:09,330
+ by a nonlinear activation function in d'italia it looks like this it is a standard 3x3 convolution
+
+34
+00:01:02,940 --> 00:01:09,330
+由非線性激活函數構成，在 d'italia 看起來是這樣，它是一個標準的 3x3 卷積
+
+35
+00:01:09,330 --> 00:01:10,710
+ followed by a nonlinear
+
+36
+00:01:09,330 --> 00:01:10,710
+隨後是非線性
+
+37
+00:01:10,710 --> 00:01:12,750
+ activation function an important
+
+38
+00:01:10,710 --> 00:01:12,750
+激活函數的一個重要
+
+39
+00:01:12,750 --> 00:01:16,200
+ design choice is that we only use the valid part of the convolution
+
+40
+00:01:12,750 --> 00:01:16,200
+設計選擇是我們僅使用卷積的有效部分
+
+41
+00:01:16,200 --> 00:01:18,659
+ which means that for a 3 by 3 convolution
+
+42
+00:01:16,200 --> 00:01:18,659
+這意味著對於 3x3 的卷積
+
+43
+00:01:18,659 --> 00:01:24,930
+ a 1 pixel border is lost this allows later to process large images in individual tiles the
+
+44
+00:01:18,659 --> 00:01:24,930
+會丟失 1 像素邊界，這使得後來可以在單獨的瓷磚中處理大型圖像
+
+45
+00:01:24,930 --> 00:01:27,840
+ next operation in the u net is a max pooling operation
+
+46
+00:01:24,930 --> 00:01:27,840
+在 U-Net 中的下一步操作是最大池化操作
+
+47
+00:01:27,840 --> 00:01:32,070
+ it reduces the xy size of the feature map so i have illustrated
+
+48
+00:01:27,840 --> 00:01:32,070
+它會減少特徵圖的 XY 大小，所以我已經說明了
+
+49
+00:01:32,070 --> 00:01:33,180
+ it as a downward
+
+50
+00:01:32,070 --> 00:01:33,180
+它作為一個向下的
+
+51
+00:01:33,180 --> 00:01:38,009
+ arrow the max pooling operation acts on each channel separately it
+
+52
+00:01:33,180 --> 00:01:38,009
+箭頭，最大池化操作對每個通道分別作用
+
+53
+00:01:38,009 --> 00:01:42,869
+ just propagates the maximum activation from each 2x2 window to the next feature map
+
+54
+00:01:38,009 --> 00:01:42,869
+它僅將每個 2x2 窗口中的最大激活值傳播到下一個特徵圖
+
+55
+00:01:42,869 --> 00:01:45,240
+ after each max pooling operation
+
+56
+00:01:42,869 --> 00:01:45,240
+每次最大池化操作後
+
+57
+00:01:45,240 --> 00:01:48,750
+ we increase the number of featured channels by a factor of 2 all
+
+58
+00:01:45,240 --> 00:01:48,750
+我們將特徵通道的數量增加了 2 倍
+
+59
+00:01:48,750 --> 00:01:50,880
+ in all the sequence of convolutions
+
+60
+00:01:48,750 --> 00:01:50,880
+在所有的卷積序列中
+
+61
+00:01:50,880 --> 00:01:54,509
+ and max pooling operations results in a spatial contraction
+
+62
+00:01:50,880 --> 00:01:54,509
+並且最大池化操作導致空間收縮
+
+63
+00:01:54,509 --> 00:01:59,969
+ where we gradually increase the bot and at the same time decreased the where standard
+
+64
+00:01:54,509 --> 00:01:59,969
+我們逐漸增加底部，同時減少標準
+
+65
+00:01:59,969 --> 00:02:01,649
+ classification every ends here
+
+66
+00:01:59,969 --> 00:02:01,649
+分類每個結束於此
+
+67
+00:02:01,649 --> 00:02:02,490
+ and all maps
+
+68
+00:02:01,649 --> 00:02:02,490
+和所有地圖
+
+69
+00:02:02,490 --> 00:02:08,128
+ and maps all features to change single output vector the unit has an additional expansion
+
+70
+00:02:02,490 --> 00:02:08,128
+和映射所有特徵以改變單一輸出向量，該單元具有額外擴展
+
+71
+00:02:08,128 --> 00:02:11,360
+ path to create a high resolution segmentation map
+
+72
+00:02:08,128 --> 00:02:11,360
+創建高解析度分割地圖的路徑
+
+73
+00:02:11,360 --> 00:02:15,569
+ this expansion path consists of a sequence of up convolutions
+
+74
+00:02:11,360 --> 00:02:15,569
+這個擴展路徑由一系列向上卷積組成
+
+75
+00:02:15,569 --> 00:02:23,219
+ and concatenation with the corresponding high resolution features from the contracting path this convolution uses
+
+76
+00:02:15,569 --> 00:02:23,219
+並與收縮路徑中對應的高解析度特徵進行串接，這個卷積使用
+
+77
+00:02:23,219 --> 00:02:28,170
+ a learned kernel to map each feature vector to the 2x2 pixel output window again
+
+78
+00:02:23,219 --> 00:02:28,170
+一個學習到的核來將每個特徵向量映射到 2x2 像素輸出窗口
+
+79
+00:02:28,170 --> 00:02:31,349
+ followed by a nonlinear activation function that's
+
+80
+00:02:28,170 --> 00:02:31,349
+隨後是非線性激活函數
+
+81
+00:02:31,349 --> 00:02:35,220
+ it the output segmentation map has two channels one for foreground
+
+82
+00:02:31,349 --> 00:02:35,220
+輸出的分割圖有兩個通道，一個用於前景
+
+83
+00:02:35,220 --> 00:02:38,609
+ and one for the background class due to the unfettered convolutions
+
+84
+00:02:35,220 --> 00:02:38,609
+和一個用於背景類別，這是由於自由卷積
+
+85
+00:02:38,609 --> 00:02:44,069
+ this map is smaller than the input image the segmentation of the yellow area uses
+
+86
+00:02:38,609 --> 00:02:44,069
+這張地圖比輸入影像小，黃色區域的分割使用了
+
+87
+00:02:44,069 --> 00:02:46,170
+ the input data of the blue area with
+
+88
+00:02:44,069 --> 00:02:46,170
+藍色區域的輸入數據與
+
+89
+00:02:46,170 --> 00:02:47,459
+ a novel uptight strategy
+
+90
+00:02:46,170 --> 00:02:47,459
+一種全新的嚴格策略
+
+91
+00:02:47,459 --> 00:02:50,549
+ we can segment arbitrarily large images at
+
+92
+00:02:47,459 --> 00:02:50,549
+我們可以隨意分割超大圖像
+
+93
+00:02:50,549 --> 00:02:52,019
+ the border we extrapolate
+
+94
+00:02:50,549 --> 00:02:52,019
+在邊界處我們外推
+
+95
+00:02:52,019 --> 00:02:53,870
+ the data by mirroring
+
+96
+00:02:52,019 --> 00:02:53,870
+透過鏡像來處理數據
+
+97
+00:02:53,870 --> 00:02:56,250
+ the main challenge in biomedical
+
+98
+00:02:53,870 --> 00:02:56,250
+生物醫學領域中的主要挑戰
+
+99
+00:02:56,250 --> 00:02:59,549
+ image segmentation is a low number of training data to teach
+
+100
+00:02:56,250 --> 00:02:59,549
+影像分割中的訓練數據量少，難以教學
+
+101
+00:02:59,549 --> 00:03:02,040
+ the network the desired robustness properties
+
+102
+00:02:59,549 --> 00:03:02,040
+網絡所需的穩健性特徵
+
+103
+00:03:02,040 --> 00:03:04,290
+ we apply random elastic deformations
+
+104
+00:03:02,040 --> 00:03:04,290
+我們應用隨機彈性變形
+
+105
+00:03:04,290 --> 00:03:08,129
+ the resulting deformed image looks perfectly like an original image
+
+106
+00:03:04,290 --> 00:03:08,129
+變形後的圖像看起來與原始圖像完全一致
+
+107
+00:03:08,129 --> 00:03:12,359
+ if i remove the green red lines here the deform cells cannot be distinguished
+
+108
+00:03:08,129 --> 00:03:12,359
+如果我移除這裡的綠色紅色線條，變形細胞將無法與真實細胞區分
+
+109
+00:03:12,359 --> 00:03:13,970
+ anymore from real cells
+
+110
+00:03:12,359 --> 00:03:13,970
+無法再與真實細胞區分
+
+111
+00:03:13,970 --> 00:03:20,579
+ the second challenge are touching objects of the same class that have to be correctly separated here
+
+112
+00:03:13,970 --> 00:03:20,579
+第二個挑戰是相同類別的觸碰物體必須在這裡正確分隔
+
+113
+00:03:20,579 --> 00:03:23,519
+ we insert background pixels between all touching objects
+
+114
+00:03:20,579 --> 00:03:23,519
+我們在所有接觸的物體之間插入背景像素
+
+115
+00:03:23,519 --> 00:03:27,299
+ and assign an individual loss weight to every pixel this
+
+116
+00:03:23,519 --> 00:03:27,299
+並為每個像素分配單獨的損失權重
+
+117
+00:03:27,299 --> 00:03:30,389
+ allows a strong panel utilization if the network accidentally
+
+118
+00:03:27,299 --> 00:03:30,389
+如果網絡意外地
+
+119
+00:03:30,389 --> 00:03:32,699
+ closes these gaps we
+
+120
+00:03:30,389 --> 00:03:32,699
+關閉這些間隙
+
+121
+00:03:32,699 --> 00:03:35,760
+ train the unit for the segmentation of neuronal structures
+
+122
+00:03:32,699 --> 00:03:35,760
+我們訓練單位以進行神經結構的分割
+
+123
+00:03:35,760 --> 00:03:42,049
+ and electron microscopy the challenges in this dataset are structures with very low contrast
+
+124
+00:03:35,760 --> 00:03:42,049
+在電子顯微鏡下，這個數據集中的挑戰是對比度非常低的結構
+
+125
+00:03:42,049 --> 00:03:43,680
+ fuzzy membranes
+
+126
+00:03:42,049 --> 00:03:43,680
+模糊膜
+
+127
+00:03:43,680 --> 00:03:45,409
+ and
+
+128
+00:03:43,680 --> 00:03:45,409
+和
+
+129
+00:03:45,409 --> 00:03:49,040
+ other cell compartments
+
+130
+00:03:45,409 --> 00:03:49,040
+其他細胞區室
+
+131
+00:03:49,040 --> 00:03:50,040
+ we
+
+132
+00:03:49,040 --> 00:03:50,040
+我們
+
+133
+00:03:50,040 --> 00:03:53,370
+ achieved a new best score in terms of the warping error which
+
+134
+00:03:50,040 --> 00:03:53,370
+在變形錯誤方面達到了新的最佳分數
+
+135
+00:03:53,370 --> 00:03:54,629
+ was most better than
+
+136
+00:03:53,370 --> 00:03:54,629
+比較好
+
+137
+00:03:54,629 --> 00:03:58,109
+ from a sliding window convolutional neural network furthermore
+
+138
+00:03:54,629 --> 00:03:58,109
+來自滑動窗口卷積神經網絡進一步
+
+139
+00:03:58,109 --> 00:04:00,150
+ our net break is very fast training
+
+140
+00:03:58,109 --> 00:04:00,150
+我們的網絡中斷速度非常快的訓練
+
+141
+00:04:00,150 --> 00:04:05,540
+ time was only 10 hours and the application is about 1 second per image
+
+142
+00:04:00,150 --> 00:04:05,540
+時間只有 10 小時，應用程式每張影像約 1 秒
+
+143
+00:04:05,540 --> 00:04:06,540
+ we
+
+144
+00:04:05,540 --> 00:04:06,540
+我們
+
+145
+00:04:06,540 --> 00:04:10,229
+ also participated at the sp cell tracking challenge 2015
+
+146
+00:04:06,540 --> 00:04:10,229
+我們也參加了 SP Cell Tracking Challenge 2015
+
+147
+00:04:10,229 --> 00:04:14,430
+ one of the data sets contains cells and phase contrast microscopy they
+
+148
+00:04:10,229 --> 00:04:14,430
+一組數據集包含細胞和相位差顯微鏡，他們
+
+149
+00:04:14,430 --> 00:04:17,430
+ show strong shape variations weak outer borders
+
+150
+00:04:14,430 --> 00:04:17,430
+顯示出強烈的形狀變化，外部邊界較弱
+
+151
+00:04:17,430 --> 00:04:19,349
+ and strong irrelevant inner borders
+
+152
+00:04:17,430 --> 00:04:19,349
+和強烈的無關內部邊界
+
+153
+00:04:19,349 --> 00:04:22,889
+ and the cytoplasm has the same structure like the background the
+
+154
+00:04:19,349 --> 00:04:22,889
+細胞質的結構與背景相同
+
+155
+00:04:22,889 --> 00:04:28,450
+ output of the unit is shown syan here and the ground throughs in yellow we
+
+156
+00:04:22,889 --> 00:04:28,450
+單元的輸出顯示在此，地面透過黃色顯示
+
+157
+00:04:28,450 --> 00:04:33,010
+ won on this data set with intersection of a union of 92% while
+
+158
+00:04:28,450 --> 00:04:33,010
+在這個數據集上，交集聯集的結果為 92%
+
+159
+00:04:33,010 --> 00:04:38,130
+ the second best method only reached 83%
+
+160
+00:04:33,010 --> 00:04:38,130
+第二好的方法僅達到 83%
+
+161
+00:04:40,230 --> 00:04:47,740
+ another dataset was even more challenging it contains touching in overlapping cells partially invisible borders
+
+162
+00:04:40,230 --> 00:04:47,740
+另一個數據集甚至更具挑戰性，它包含重疊的單元格、部分不可見的邊界
+
+163
+00:04:47,740 --> 00:04:54,040
+ and the cells leaves the focal plane here we want with an even larger margin more details
+
+164
+00:04:47,740 --> 00:04:54,040
+單元格離開了焦平面，我們希望有更大的邊距和更多的細節
+
+165
+00:04:54,040 --> 00:04:58,390
+ and the implementation are available on our home page thank you for your attention
+
+166
+00:04:54,040 --> 00:04:58,390
+實施方案已在我們的首頁提供，感謝您的關注
+
