@@ -1,5 +1,19 @@
 __pycache__
 __MACOSX
+.DS_Store
+
+# Pesonal files
 *313551*
 kaggle.json
-.pth
+
+# Model weights
+model_weight
+*.pth
+*.pt
+*.pkl
+*.ckpt
+
+# Dataset
+dataset
+*Dataset
+nycu-dl-2024-summer-lab-4.zip
