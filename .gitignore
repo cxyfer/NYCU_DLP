@@ -1,6 +1,8 @@
 __pycache__
 __MACOSX
 .DS_Store
+desktop.ini
+*.pyc
 
 # Pesonal files
 *313551*
@@ -17,3 +19,7 @@ model_weight
 dataset
 *Dataset
 nycu-dl-2024-summer-lab-4.zip
+
+# Referece
+*translated.pdf
+*.mp4
