@@ -16,10 +16,11 @@ model_weight
 *.ckpt
 
 # Dataset
-dataset
+*dataset
 *Dataset
 Lab 2 - EEG Motor Imagery Classification.zip
 nycu-dl-2024-summer-lab-4.zip
+lab5_dataset.zip
 
 # Referece
 *translated.pdf
